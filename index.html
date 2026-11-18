@@ -3,336 +3,507 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kaffeekasse & Frühstück – Kripo Dülmen</title>
+  <title>Tatort-Kaffeekasse · Kripo Dülmen</title>
   <style>
     :root {
-      --bg: #f1f5f9;
+      --bg: #f5f3ef;
       --surface: #ffffff;
-      --surface-alt: #f8fafc;
-      --primary: #0f172a;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --success: #16a34a;
-      --success-bg: #dcfce7;
-      --warning: #d97706;
-      --warning-bg: #fef3c7;
-      --danger: #dc2626;
-      --danger-bg: #fee2e2;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --radius: 14px;
-      --shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+      --surface-subtle: #faf9f6;
+      --header-bg: #1c1917;
+      --header-border: #292524;
+      --ink: #1c1917;
+      --ink-secondary: #57534e;
+      --ink-muted: #78716c;
+      --border: #e6e2da;
+      --border-strong: #d6d0c4;
+      --accent: #9a3412;
+      --accent-hover: #7c2d12;
+      --accent-soft: #ffedd5;
+      --pos: #15803d;
+      --pos-bg: #dcfce7;
+      --neg: #b91c1c;
+      --neg-bg: #fee2e2;
+      --warn: #b45309;
+      --warn-bg: #fef3c7;
+      --radius: 12px;
+      --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.05);
+      --shadow-md: 0 10px 28px rgba(28, 25, 23, 0.14);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      padding-bottom: 56px;
+      color: var(--ink);
+      line-height: 1.48;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 64px;
     }
+
+    .num { font-variant-numeric: tabular-nums; }
 
     /* Header */
     header {
-      background: var(--primary);
-      color: #fff;
-      padding: 18px 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.14);
+      background: var(--header-bg);
+      color: #fafaf9;
+      border-bottom: 1px solid var(--header-border);
       position: sticky;
       top: 0;
       z-index: 40;
     }
     .header-inner {
-      max-width: 1120px;
+      max-width: 1140px;
       margin: 0 auto;
+      padding: 14px 20px;
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 14px;
+      flex-wrap: wrap;
     }
-    .brand h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
-    .brand p { font-size: 0.82rem; color: #94a3b8; }
-
-    .header-controls {
+    .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+    }
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #292524;
+      border: 1px solid #44403c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fdba74;
+      flex-shrink: 0;
+    }
+    .brand h1 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+    }
+    .brand p {
+      font-size: 0.78rem;
+      color: #a8a29e;
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
-    .sync-badge {
+    .status-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
+      gap: 7px;
+      padding: 6px 11px;
       border-radius: 999px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
-      background: rgba(255,255,255,0.1);
-      color: #e2e8f0;
-      border: 1px solid rgba(255,255,255,0.16);
+      background: #292524;
+      color: #d6d3d1;
+      border: 1px solid #44403c;
       cursor: pointer;
     }
-    .sync-dot {
-      width: 8px;
-      height: 8px;
+    .status-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: #94a3b8;
+      background: #78716c;
     }
-    .sync-badge.live .sync-dot { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
-    .sync-badge.error .sync-dot { background: #ef4444; }
+    .status-pill.live .status-dot { background: #22c55e; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2); }
+    .status-pill.error .status-dot { background: #ef4444; }
 
+    /* Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 7px;
       padding: 9px 14px;
-      border-radius: 10px;
-      font-size: 0.88rem;
+      border-radius: 9px;
+      font-size: 0.86rem;
       font-weight: 600;
       border: 1px solid transparent;
       cursor: pointer;
-      transition: all 0.15s ease;
-      text-decoration: none;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+      font-family: inherit;
+      white-space: nowrap;
     }
     .btn:active { transform: translateY(1px); }
+    .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
     .btn-primary { background: var(--accent); color: #fff; }
     .btn-primary:hover { background: var(--accent-hover); }
-    .btn-success { background: var(--success); color: #fff; }
-    .btn-success:hover { background: #15803d; }
-    .btn-warning { background: var(--warning); color: #fff; }
-    .btn-warning:hover { background: #b45309; }
-    .btn-outline { background: var(--surface); color: var(--text); border-color: var(--border); }
-    .btn-outline:hover { background: var(--surface-alt); }
-    .btn-ghost { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.2); }
-    .btn-ghost:hover { background: rgba(255,255,255,0.2); }
-    .btn-danger { background: var(--danger); color: #fff; }
-    .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 8px; }
 
+    .btn-dark { background: var(--ink); color: #fff; }
+    .btn-dark:hover { background: #292524; }
+
+    .btn-surface {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-surface:hover { background: var(--surface-subtle); }
+
+    .btn-header {
+      background: #292524;
+      color: #f5f5f4;
+      border-color: #44403c;
+    }
+    .btn-header:hover { background: #3f3b38; }
+
+    .btn-danger-soft {
+      background: var(--neg-bg);
+      color: var(--neg);
+      border-color: #fecaca;
+    }
+    .btn-danger-soft:hover { background: #fecaca; }
+
+    .btn-sm { padding: 6px 10px; font-size: 0.79rem; border-radius: 7px; }
+    .btn-icon { padding: 6px; border-radius: 7px; }
+
+    /* Layout */
     .container {
-      max-width: 1120px;
+      max-width: 1140px;
       margin: 22px auto 0;
-      padding: 0 16px;
+      padding: 0 18px;
     }
 
-    /* Info Banner */
-    .banner {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1e3a8a;
-      padding: 12px 16px;
-      border-radius: var(--radius);
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      font-size: 0.88rem;
-    }
-    .banner.hidden { display: none; }
-
-    /* KPI Grid */
+    /* KPI Strip */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 18px;
     }
     .kpi-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 16px 18px;
-      box-shadow: var(--shadow);
+      padding: 15px 18px;
+      box-shadow: var(--shadow-sm);
     }
-    .kpi-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
-    .kpi-value { font-size: 1.65rem; font-weight: 800; margin-top: 4px; }
-    .kpi-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
-
-    /* Action Bar */
-    .action-bar {
+    .kpi-top {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 22px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-muted);
+    }
+    .kpi-value {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-top: 6px;
+    }
+    .kpi-sub {
+      font-size: 0.78rem;
+      color: var(--ink-secondary);
+      margin-top: 3px;
     }
 
-    /* Layout Columns */
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Main 2-Column Grid */
     .main-grid {
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
       gap: 20px;
       align-items: start;
     }
-    @media (max-width: 880px) {
+    @media (max-width: 900px) {
       .main-grid { grid-template-columns: 1fr; }
     }
 
-    .card {
+    .panel {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-sm);
       overflow: hidden;
       margin-bottom: 20px;
     }
-    .card-header {
-      padding: 15px 18px;
+    .panel-header {
+      padding: 14px 18px;
       border-bottom: 1px solid var(--border);
+      background: var(--surface-subtle);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      background: var(--surface-alt);
     }
-    .card-header h2 { font-size: 1rem; font-weight: 700; }
-    .card-body { padding: 16px 18px; }
+    .panel-title {
+      font-size: 0.94rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-body { padding: 16px 18px; }
 
-    /* Member List */
+    /* Member Rows */
     .member-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
+      padding: 13px 18px;
       border-bottom: 1px solid var(--border);
       cursor: pointer;
-      transition: background 0.12s;
+      transition: background 0.12s ease;
       gap: 12px;
     }
     .member-row:last-child { border-bottom: none; }
-    .member-row:hover { background: #f8fafc; }
-    .member-info { display: flex; flex-direction: column; gap: 3px; }
-    .member-name { font-weight: 700; font-size: 0.96rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .member-meta { font-size: 0.78rem; color: var(--text-muted); }
+    .member-row:hover { background: var(--surface-subtle); }
 
-    .badge {
-      display: inline-block;
+    .member-main { display: flex; flex-direction: column; gap: 3px; }
+    .member-name-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-weight: 650;
+      font-size: 0.95rem;
+    }
+    .member-sub {
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
       padding: 2px 8px;
       border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 700;
+      font-size: 0.71rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
     }
-    .badge-neutral { background: #e2e8f0; color: #334155; }
-    .badge-ok { background: var(--success-bg); color: var(--success); }
-    .badge-warn { background: var(--warning-bg); color: var(--warning); }
-    .badge-debt { background: var(--danger-bg); color: var(--danger); }
+    .pill-ok { background: var(--pos-bg); color: var(--pos); }
+    .pill-credit { background: #e0f2fe; color: #0369a1; }
+    .pill-warn { background: var(--warn-bg); color: var(--warn); }
+    .pill-muted { background: #ece8e1; color: var(--ink-secondary); }
 
-    .balance-box { text-align: right; min-width: 115px; }
-    .balance-amount { font-weight: 800; font-size: 1.05rem; }
-    .text-pos { color: var(--success); }
-    .text-neg { color: var(--danger); }
-    .text-neu { color: var(--text); }
+    .member-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: right;
+    }
+    .balance-val {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .c-pos { color: var(--pos); }
+    .c-neg { color: var(--neg); }
+    .c-neu { color: var(--ink); }
 
-    /* Quick Breakfast Selector */
-    .chip-grid {
+    /* Breakfast Chips */
+    .chip-wrap {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin: 12px 0 14px;
+      gap: 7px;
+      margin: 12px 0 16px;
     }
-    .person-chip {
-      padding: 7px 12px;
-      border-radius: 999px;
-      border: 1.5px solid var(--border);
+    .chip {
+      padding: 7px 13px;
+      border-radius: 8px;
+      border: 1px solid var(--border-strong);
       background: var(--surface);
       font-size: 0.85rem;
       font-weight: 600;
+      color: var(--ink);
       cursor: pointer;
       user-select: none;
-      transition: all 0.12s;
+      transition: all 0.12s ease;
     }
-    .person-chip.selected {
-      background: #dbeafe;
-      border-color: var(--accent);
-      color: #1e40af;
+    .chip:hover { border-color: var(--ink-muted); }
+    .chip.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
     }
 
-    /* Feed / Transactions */
-    .tx-item {
-      padding: 12px 16px;
+    .breakfast-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Transaction Ledger */
+    .tx-row {
+      padding: 12px 18px;
       border-bottom: 1px solid var(--border);
       display: flex;
-      justify-content: space-between;
       align-items: flex-start;
-      gap: 10px;
-      font-size: 0.88rem;
+      justify-content: space-between;
+      gap: 12px;
     }
-    .tx-item:last-child { border-bottom: none; }
-    .tx-title { font-weight: 600; }
-    .tx-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
-    .tx-right { text-align: right; white-space: nowrap; }
+    .tx-row:last-child { border-bottom: none; }
+    .tx-title { font-size: 0.88rem; font-weight: 600; }
+    .tx-meta { font-size: 0.77rem; color: var(--ink-muted); margin-top: 2px; }
+    .tx-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .tx-amount { font-size: 0.9rem; font-weight: 700; }
+
+    .undo-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--ink-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .undo-btn:hover {
+      background: var(--neg-bg);
+      color: var(--neg);
+    }
+
+    /* Select / Inputs */
+    .select-sm {
+      padding: 5px 9px;
+      font-size: 0.78rem;
+      border-radius: 7px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--ink);
+      font-family: inherit;
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--ink);
+    }
+    .form-control {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: var(--surface);
+      color: var(--ink);
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(154, 52, 18, 0.12);
+    }
+    .hint { font-size: 0.76rem; color: var(--ink-muted); margin-top: 4px; }
 
     /* Modals */
-    .modal-backdrop {
+    .backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.55);
+      background: rgba(28, 25, 23, 0.55);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 16px;
       z-index: 100;
     }
-    .modal-backdrop.open { display: flex; }
+    .backdrop.open { display: flex; }
     .modal {
       background: var(--surface);
-      border-radius: 16px;
-      max-width: 540px;
+      border-radius: 14px;
+      max-width: 520px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
     }
-    .modal-header {
-      padding: 16px 20px;
+    .modal-head {
+      padding: 15px 20px;
       border-bottom: 1px solid var(--border);
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       position: sticky;
       top: 0;
       background: var(--surface);
       z-index: 2;
     }
-    .modal-header h3 { font-size: 1.05rem; font-weight: 700; }
+    .modal-head h3 { font-size: 1rem; font-weight: 700; }
     .modal-body { padding: 18px 20px; }
-    .modal-footer {
-      padding: 14px 20px;
+    .modal-foot {
+      padding: 13px 20px;
       border-top: 1px solid var(--border);
+      background: var(--surface-subtle);
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
-      background: var(--surface-alt);
+      gap: 8px;
     }
-
-    .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 0.83rem; font-weight: 600; margin-bottom: 5px; color: var(--text); }
-    .form-control {
-      width: 100%;
-      padding: 9px 12px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      font-size: 0.92rem;
-      font-family: inherit;
-      background: #fff;
-    }
-    .form-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
-    .help-text { font-size: 0.77rem; color: var(--text-muted); margin-top: 4px; }
 
     .divider { height: 1px; background: var(--border); margin: 16px 0; }
-    .code-box {
-      background: #f1f5f9;
-      padding: 8px 10px;
+    .mono-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-strong);
       border-radius: 8px;
-      font-family: monospace;
-      font-size: 0.8rem;
+      padding: 9px 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem;
       word-break: break-all;
-      border: 1px solid var(--border);
+      color: var(--ink);
     }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--header-bg);
+      color: #fafaf9;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-md);
+      border: 1px solid #44403c;
+      transform: translateY(120%);
+      opacity: 0;
+      transition: all 0.22s ease;
+      z-index: 200;
+      max-width: 90vw;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
   </style>
 </head>
 <body>
@@ -340,90 +511,147 @@
 <header>
   <div class="header-inner">
     <div class="brand">
-      <h1>☕ Kaffeekasse & Frühstück – Kripo Dülmen</h1>
-      <p>Monatsbeiträge, Freitagsfrühstück & Barkassen-Ausgleich (± 0 € Prinzip)</p>
-    </div>
-    <div class="header-controls">
-      <div id="syncBadge" class="sync-badge" onclick="openSettingsModal()" title="Cloud-Sync & Einstellungen öffnen">
-        <span class="sync-dot"></span>
-        <span id="syncText">Lokal (Offline)</span>
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/>
+        </svg>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="openSettingsModal()">⚙️ Cloud-Sync & Einstellungen</button>
+      <div>
+        <h1>Tatort-Kaffeekasse</h1>
+        <p>Kripo Dülmen · Frühstück, Einkäufe &amp; Barkasse</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button id="adminLockBtn" class="btn btn-header btn-sm" style="display:none;" onclick="toggleAdminSession()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span id="adminLockLabel">Gesperrt</span>
+      </button>
+
+      <div id="syncBadge" class="status-pill" onclick="openSettingsModal()" title="Cloud-Synchronisation konfigurieren">
+        <span class="status-dot"></span>
+        <span id="syncText">Lokal gespeichert</span>
+      </div>
+
+      <button class="btn btn-header btn-sm" onclick="manualRefresh()" title="Jetzt synchronisieren">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+      </button>
+
+      <button class="btn btn-header btn-sm" onclick="openSettingsModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Einstellungen</span>
+      </button>
     </div>
   </div>
 </header>
 
 <div class="container">
-  <!-- Info / Monats-Banner -->
-  <div id="infoBanner" class="banner hidden">
-    <span id="infoBannerText"></span>
-    <button class="btn btn-sm btn-outline" onclick="hideBanner()">OK</button>
-  </div>
-
-  <!-- KPI-Übersicht -->
+  <!-- KPI-Leiste -->
   <div class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-label">💵 Barkasse vor Ort</div>
-      <div class="kpi-value" id="kpiCash">0,00 €</div>
-      <div class="kpi-sub">Physisches Bargeld in der Kassette</div>
+      <div class="kpi-top">
+        <span>Barkasse (Kassette)</span>
+        <button class="btn btn-surface btn-sm" style="padding:2px 7px; font-size:0.72rem;" onclick="openCashAdjustModal()">Korrektur</button>
+      </div>
+      <div class="kpi-value num" id="kpiCash">0,00 €</div>
+      <div class="kpi-sub">Physischer Bargeldbestand vor Ort</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">⚖️ Offene Differenz (Kollegen)</div>
-      <div class="kpi-value" id="kpiNet">0,00 €</div>
-      <div class="kpi-sub" id="kpiNetSub">Summe aller Einzelstände</div>
+      <div class="kpi-top"><span>Offene Minus-Stände</span></div>
+      <div class="kpi-value num c-neg" id="kpiDebt">0,00 €</div>
+      <div class="kpi-sub">Summe aller offenen Beträge an die Kasse</div>
     </div>
+
     <div class="kpi-card">
-      <div class="kpi-label">📅 Aktueller Abrechnungsmonat</div>
-      <div class="kpi-value" id="kpiMonth">-</div>
-      <div class="kpi-sub">3,00 € Grund + 5,00 € Kaffee-Flatrate</div>
+      <div class="kpi-top"><span>Einkaufs-Guthaben</span></div>
+      <div class="kpi-value num c-pos" id="kpiCredit">0,00 €</div>
+      <div class="kpi-sub">Ausgelegte Einkäufe zum Verrechnen</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-top"><span>Abrechnungsmonat</span></div>
+      <div class="kpi-value" id="kpiMonth" style="font-size:1.3rem;">-</div>
+      <div class="kpi-sub">3,00 € Grund + 5,00 € Kaffee-Flat</div>
     </div>
   </div>
 
-  <!-- Hauptaktionen -->
-  <div class="action-bar">
-    <button class="btn btn-primary" onclick="openExpenseModal()">🛒 Ausgabe / Einkauf eintragen</button>
-    <button class="btn btn-success" onclick="openCashModal()">💵 Barzahlung / Ausgleich</button>
-    <button class="btn btn-outline" onclick="openMemberModal()">👤 Kollege hinzufügen</button>
-    <button class="btn btn-outline" onclick="exportCSV()">📊 Excel / CSV-Export</button>
+  <!-- Aktionsleiste -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button class="btn btn-primary" onclick="openExpenseModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Ausgabe / Einkauf</span>
+      </button>
+      <button class="btn btn-dark" onclick="openCashModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+        <span>Barzahlung / Ausgleich</span>
+      </button>
+      <button class="btn btn-surface" onclick="openMemberModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        <span>Kollege hinzufügen</span>
+      </button>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-surface btn-sm" onclick="exportCSV()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Excel-Export (CSV)</span>
+      </button>
+    </div>
   </div>
 
+  <!-- Hauptbereich -->
   <div class="main-grid">
-    <!-- Linke Spalte: Kollegen & Stände -->
+    <!-- Linke Spalte: Kollegenliste -->
     <div>
-      <div class="card">
-        <div class="card-header">
-          <h2>👥 Übersicht Kollegen (Klick für Kontoauszug)</h2>
-          <span class="badge badge-neutral" id="memberCountBadge">0 Personen</span>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>Kollegen &amp; Kontostände</span>
+            <span class="pill pill-muted num" id="memberCountBadge">0</span>
+          </div>
+          <select id="memberSort" class="select-sm" onchange="renderAll()">
+            <option value="name">Sortieren: A–Z</option>
+            <option value="balance_asc">Größtes Minus zuerst</option>
+            <option value="balance_desc">Größtes Guthaben zuerst</option>
+          </select>
         </div>
         <div id="memberList"></div>
       </div>
     </div>
 
-    <!-- Rechte Spalte: Freitagsfrühstück & Letzte Buchungen -->
+    <!-- Rechte Spalte: Frühstück + Buchungsverlauf -->
     <div>
-      <div class="card">
-        <div class="card-header">
-          <h2>🥐 Schnelles Freitagsfrühstück (5,00 € p.P.)</h2>
-          <button class="btn btn-sm btn-outline" onclick="toggleAllBreakfast()">Alle / Keine</button>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Freitagsfrühstück (5,00 € p. P.)</div>
+          <button class="btn btn-surface btn-sm" onclick="toggleAllBreakfast()">Alle / Keine</button>
         </div>
-        <div class="card-body">
-          <p style="font-size:0.84rem; color:var(--text-muted);">
-            Teilnehmer anklicken – jedem ausgewählten Kollegen werden <strong>5,00 €</strong> berechnet:
+        <div class="panel-body">
+          <p style="font-size:0.83rem; color:var(--ink-secondary);">
+            Teilnehmer auswählen. Jedem ausgewählten Kollegen werden automatisch <strong>5,00 €</strong> belastet.
           </p>
-          <div id="breakfastChips" class="chip-grid"></div>
-          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-            <input type="date" id="breakfastDate" class="form-control" style="max-width:165px;" />
+          <div id="breakfastChips" class="chip-wrap"></div>
+          <div class="breakfast-footer">
+            <input type="date" id="breakfastDate" class="form-control" style="max-width:155px;" />
             <button class="btn btn-primary" style="flex:1;" onclick="bookBreakfast()">
-              Frühstück buchen (<span id="breakfastTotalPreview">0,00 €</span>)
+              <span>Frühstück verbuchen</span>
+              <span class="num" id="breakfastPreview">(0 Pers. · 0,00 €)</span>
             </button>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <h2>🧾 Letzte Buchungen</h2>
-          <span style="font-size:0.78rem; color:var(--text-muted);" id="txCountLabel">0 Einträge</span>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Buchungsjournal</div>
+          <select id="txFilter" class="select-sm" onchange="renderAll()">
+            <option value="all">Alle Buchungen</option>
+            <option value="breakfast">Nur Frühstück</option>
+            <option value="expense">Nur Einkäufe</option>
+            <option value="cash">Nur Barzahlungen</option>
+            <option value="monthly">Nur Monatsbeiträge</option>
+          </select>
         </div>
         <div id="txList"></div>
       </div>
@@ -432,83 +660,110 @@
 </div>
 
 <!-- MODAL: Ausgabe / Einkauf -->
-<div id="expenseModal" class="modal-backdrop">
+<div id="expenseModal" class="backdrop">
   <div class="modal">
-    <div class="modal-header">
-      <h3>🛒 Ausgabe / Einkauf eintragen</h3>
-      <button class="btn btn-sm btn-outline" onclick="closeModal('expenseModal')">✕</button>
+    <div class="modal-head">
+      <h3>Ausgabe / Einkauf eintragen</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('expenseModal')">Schließen</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label>Wer hat eingekauft / bezahlt?</label>
+        <label>Bezahlt von</label>
         <select id="expPayer" class="form-control"></select>
-        <div class="help-text">Wähle „Barkasse (Kassette)“, falls das Geld direkt bar aus der Kasse genommen wurde.</div>
+        <div class="hint">Bei privater Auslage wird der Betrag dem Kollegen als Guthaben gutgeschrieben.</div>
       </div>
       <div class="form-group">
-        <label>Zweck / Beschreibung</label>
+        <label>Verwendungszweck</label>
         <input type="text" id="expDesc" class="form-control" placeholder="z. B. Einkauf Lidl fürs Frühstück, Kaffeebohnen..." />
       </div>
       <div class="form-group">
         <label>Betrag (€)</label>
-        <input type="number" id="expAmount" class="form-control" step="0.01" min="0.01" placeholder="z. B. 65.00" />
+        <input type="number" id="expAmount" class="form-control" step="0.01" min="0.01" placeholder="65.00" />
       </div>
       <div class="form-group">
         <label>Datum</label>
         <input type="date" id="expDate" class="form-control" />
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('expenseModal')">Abbrechen</button>
+    <div class="modal-foot">
+      <button class="btn btn-surface" onclick="closeModal('expenseModal')">Abbrechen</button>
       <button class="btn btn-primary" onclick="saveExpense()">Einkauf verbuchen</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL: Barzahlung / Ausgleich -->
-<div id="cashModal" class="modal-backdrop">
+<!-- MODAL: Barzahlung -->
+<div id="cashModal" class="backdrop">
   <div class="modal">
-    <div class="modal-header">
-      <h3>💵 Barzahlung / Kassenausgleich</h3>
-      <button class="btn btn-sm btn-outline" onclick="closeModal('cashModal')">✕</button>
+    <div class="modal-head">
+      <h3>Barzahlung / Ausgleich erfassen</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('cashModal')">Schließen</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
         <label>Kollege</label>
         <select id="cashMember" class="form-control" onchange="updateCashHint()"></select>
-        <div id="cashCurrentHint" class="help-text"></div>
+        <div id="cashCurrentHint" class="hint"></div>
       </div>
       <div class="form-group">
-        <label>Art der Barzahlung</label>
+        <label>Richtung der Zahlung</label>
         <select id="cashDirection" class="form-control">
-          <option value="in">Kollege zahlt bar IN die Barkasse ein (tilgt Minus)</option>
-          <option value="out">Kollege erhält Guthaben bar AUS der Barkasse</option>
+          <option value="in">Einzahlung in die Barkasse (Kollege zahlt bar ein)</option>
+          <option value="out">Auszahlung aus der Barkasse (Guthaben bar auszahlen)</option>
         </select>
       </div>
       <div class="form-group">
         <label>Betrag (€)</label>
         <div style="display:flex; gap:8px;">
           <input type="number" id="cashAmount" class="form-control" step="0.01" min="0.01" placeholder="0.00" />
-          <button type="button" class="btn btn-outline btn-sm" onclick="fillExactBalance()">Auf 0,00 € setzen</button>
+          <button type="button" class="btn btn-surface btn-sm" onclick="fillExactBalance()">Auf 0,00 € setzen</button>
         </div>
       </div>
       <div class="form-group">
-        <label>Notiz (optional)</label>
+        <label>Bemerkung (optional)</label>
         <input type="text" id="cashNote" class="form-control" placeholder="z. B. Bar ausgeglichen" />
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('cashModal')">Abbrechen</button>
-      <button class="btn btn-success" onclick="saveCashPayment()">Barzahlung speichern</button>
+    <div class="modal-foot">
+      <button class="btn btn-surface" onclick="closeModal('cashModal')">Abbrechen</button>
+      <button class="btn btn-dark" onclick="saveCashPayment()">Barzahlung verbuchen</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Barkasse Korrektur -->
+<div id="cashAdjustModal" class="backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Barkasse (Kassette) korrigieren</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('cashAdjustModal')">Schließen</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:12px;">
+        Falls beim Zählen der Kassette ein abweichender Bargeldbestand festgestellt wird (z. B. Startbestand bei Einführung der App), kannst du ihn hier anpassen.
+      </p>
+      <div class="form-group">
+        <label>Gezählter Bargeldbestand (€)</label>
+        <input type="number" id="adjCashAmount" class="form-control" step="0.01" />
+      </div>
+      <div class="form-group">
+        <label>Begründung</label>
+        <input type="text" id="adjCashReason" class="form-control" placeholder="z. B. Startbestand Kassette gezählt" />
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-surface" onclick="closeModal('cashAdjustModal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveCashAdjustment()">Bestand übernehmen</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL: Kollege hinzufügen -->
-<div id="memberModal" class="modal-backdrop">
+<div id="memberModal" class="backdrop">
   <div class="modal">
-    <div class="modal-header">
-      <h3>👤 Neuen Kollegen anlegen</h3>
-      <button class="btn btn-sm btn-outline" onclick="closeModal('memberModal')">✕</button>
+    <div class="modal-head">
+      <h3>Neuen Kollegen anlegen</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('memberModal')">Schließen</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
@@ -518,62 +773,60 @@
       <div class="form-group">
         <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
           <input type="checkbox" id="newMemberCoffee" checked />
-          Kaffee-Flatrate aktiv (5,00 € / Monat zusätzlich zu 3,00 € Grundbeitrag)
+          <span>Kaffee-Flatrate aktiv (5,00 € / Monat zusätzlich zu 3,00 € Grundbeitrag)</span>
         </label>
       </div>
       <div class="form-group">
-        <label>Startsaldo (€, optional – meist 0.00)</label>
+        <label>Übertrag / Startsaldo (€)</label>
         <input type="number" id="newMemberStartBalance" class="form-control" step="0.01" value="0.00" />
+        <div class="hint">Positiv = Guthaben, Negativ (z. B. -10.00) = offener Betrag aus alter Liste.</div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('memberModal')">Abbrechen</button>
-      <button class="btn btn-primary" onclick="saveNewMember()">Kollege speichern</button>
+    <div class="modal-foot">
+      <button class="btn btn-surface" onclick="closeModal('memberModal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveNewMember()">Speichern</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL: Kontoauszug / Detailansicht Kollege -->
-<div id="detailModal" class="modal-backdrop">
+<!-- MODAL: Kontoauszug Kollege -->
+<div id="detailModal" class="backdrop">
   <div class="modal">
-    <div class="modal-header">
+    <div class="modal-head">
       <h3 id="detailTitle">Kontoauszug</h3>
-      <button class="btn btn-sm btn-outline" onclick="closeModal('detailModal')">✕</button>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('detailModal')">Schließen</button>
     </div>
     <div class="modal-body" id="detailBody"></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('detailModal')">Schließen</button>
-    </div>
   </div>
 </div>
 
-<!-- MODAL: Cloud-Sync & Einstellungen -->
-<div id="settingsModal" class="modal-backdrop">
+<!-- MODAL: Einstellungen & Cloud-Sync -->
+<div id="settingsModal" class="backdrop">
   <div class="modal">
-    <div class="modal-header">
-      <h3>⚙️ Cloud-Sync & Einstellungen</h3>
-      <button class="btn btn-sm btn-outline" onclick="closeModal('settingsModal')">✕</button>
+    <div class="modal-head">
+      <h3>Cloud-Sync &amp; Einstellungen</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('settingsModal')">Schließen</button>
     </div>
     <div class="modal-body">
-      <h4 style="font-size:0.95rem; margin-bottom:6px;">☁️ Echtzeit-Cloud-Synchronisation (Firebase)</h4>
-      <p class="help-text" style="margin-bottom:10px;">
-        Hinterlege hier eure kostenlose Firebase Realtime Database URL (z. B. <code>https://euer-projekt-default-rtdb.europe-west1.firebasedatabase.app</code>), damit alle Kollegen auf ihren Handys denselben Stand sehen.
+      <h4 style="font-size:0.92rem; margin-bottom:4px;">Echtzeit-Synchronisation (Firebase)</h4>
+      <p class="hint" style="margin-bottom:10px;">
+        Hinterlege eure kostenlose Firebase Realtime Database URL, damit alle Smartphones und Dienstrechner denselben Kassenstand sehen.
       </p>
       <div class="form-group">
         <label>Firebase Realtime Database URL</label>
-        <input type="url" id="cfgFirebaseUrl" class="form-control" placeholder="https://....firebasedatabase.app" />
+        <input type="url" id="cfgFirebaseUrl" class="form-control" placeholder="https://euer-projekt-default-rtdb.europe-west1.firebasedatabase.app" />
       </div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-        <button class="btn btn-primary btn-sm" onclick="saveCloudConfig()">Verbindung testen & speichern</button>
-        <button class="btn btn-outline btn-sm" onclick="copyInviteLink()">📲 Einladungs-Link für WhatsApp kopieren</button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+        <button class="btn btn-primary btn-sm" onclick="saveCloudConfig()">Verbinden &amp; speichern</button>
+        <button class="btn btn-surface btn-sm" onclick="copyInviteLink()">Einladungslink für WhatsApp kopieren</button>
       </div>
-      <div id="inviteLinkBox" class="code-box" style="display:none; margin-bottom:12px;"></div>
+      <div id="inviteLinkBox" class="mono-box" style="display:none; margin-bottom:12px;"></div>
 
       <div class="divider"></div>
 
-      <h4 style="font-size:0.95rem; margin-bottom:6px;">🔐 Berechtigungen (Alle vs. 2 Admins)</h4>
+      <h4 style="font-size:0.92rem; margin-bottom:8px;">Berechtigungen &amp; Monatsbeiträge</h4>
       <div class="form-group">
-        <label>Wer darf Buchungen eintragen und ändern?</label>
+        <label>Wer darf Buchungen eintragen oder stornieren?</label>
         <select id="cfgAdminMode" class="form-control">
           <option value="all">Alle Kollegen (offen für jeden)</option>
           <option value="admins">Nur 2 Kassen-Admins (mit Admin-PIN geschützt)</option>
@@ -583,25 +836,33 @@
         <label>Admin-PIN (Standard: 1100)</label>
         <input type="text" id="cfgAdminPin" class="form-control" maxlength="12" />
       </div>
-      <button class="btn btn-outline btn-sm" onclick="saveAdminSettings()">Berechtigung speichern</button>
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="cfgAutoMonthly" checked />
+          <span>Monatsbeiträge (3 € Grund + 5 € Kaffee) am Monatsanfang automatisch buchen</span>
+        </label>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-dark btn-sm" onclick="saveAdminSettings()">Einstellungen speichern</button>
+        <button class="btn btn-surface btn-sm" onclick="triggerManualMonthBilling()">Aktuellen Monat jetzt buchen</button>
+      </div>
 
       <div class="divider"></div>
 
-      <h4 style="font-size:0.95rem; margin-bottom:6px;">💾 Backup & Zurücksetzen</h4>
+      <h4 style="font-size:0.92rem; margin-bottom:8px;">Datensicherung &amp; Echtstart</h4>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn btn-outline btn-sm" onclick="exportJSON()">JSON-Backup herunterladen</button>
-        <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer;">
+        <button class="btn btn-surface btn-sm" onclick="exportJSON()">JSON-Backup sichern</button>
+        <label class="btn btn-surface btn-sm" style="margin:0; cursor:pointer;">
           JSON-Backup laden
           <input type="file" accept=".json" style="display:none;" onchange="importJSON(event)" />
         </label>
-        <button class="btn btn-danger btn-sm" onclick="resetForProduction()">Daten leeren (Echtstart)</button>
+        <button class="btn btn-danger-soft btn-sm" onclick="resetForProduction()">Alle Stände auf 0,00 € leeren</button>
       </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('settingsModal')">Fertig</button>
     </div>
   </div>
 </div>
+
+<div id="toast" class="toast"></div>
 
 <script>
   // Optional: Hier fest eure Firebase-URL eintragen, damit sie auch ohne Einladungslink aktiv ist:
@@ -609,31 +870,33 @@
     firebaseUrl: ""
   };
 
-  const STORAGE_KEY = "kripo_duelmen_kasse_v3";
-  const URL_KEY = "kripo_duelmen_firebase_url";
-  const EQUILIBRIUM_LIMIT = 15.0; // ± 15 € gilt als "Im Ausgleich"
+  const STORAGE_KEY = "tatort_kaffeekasse_state_v4";
+  const URL_KEY = "tatort_kaffeekasse_fb_url";
+  const ADMIN_SESSION_KEY = "tatort_kaffeekasse_admin_unlocked";
+  const EQUILIBRIUM_LIMIT = 15.0; // ± 15,00 € gilt als "Im Ausgleich"
 
   let state = {
     members: [],
     transactions: [],
     cashBox: 0,
     billedMonths: [],
-    adminMode: "all", // "all" | "admins"
+    adminMode: "all",
     adminPin: "1100",
+    autoMonthly: true,
     updatedAt: 0
   };
 
   let selectedBreakfastIds = new Set();
   let eventSource = null;
-  let isSyncingFromCloud = false;
+  let syncDebounceTimer = null;
+  let isApplyingRemote = false;
 
   // --- Initialisierung ---
   function init() {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = getLocalDateISO();
     document.getElementById("breakfastDate").value = today;
     document.getElementById("expDate").value = today;
 
-    // Firebase-URL aus URL-Parameter (?db=...), LocalStorage oder CLOUD_CONFIG laden
     const params = new URLSearchParams(window.location.search);
     const dbParam = params.get("db");
     if (dbParam && dbParam.startsWith("https://")) {
@@ -641,6 +904,7 @@
     }
 
     loadLocalState();
+    updateAdminHeaderButton();
 
     const fbUrl = getFirebaseUrl();
     if (fbUrl) {
@@ -649,6 +913,13 @@
       checkAndApplyMonthlyFees(false);
       renderAll();
     }
+
+    // Wichtig für Smartphones: Beim Zurückkehren aus WhatsApp/Sperrbildschirm sofort abgleichen
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && getFirebaseUrl()) {
+        fetchLatestFromFirebase(false);
+      }
+    });
   }
 
   function cleanFirebaseUrl(url) {
@@ -672,6 +943,7 @@
 
   function seedDemoData() {
     const curMonth = getCurrentMonthKey();
+    const today = getLocalDateISO();
     state = {
       members: [
         { id: "m1", name: "Markus", coffeeFlat: true, balance: 12.00 },
@@ -683,28 +955,35 @@
       transactions: [
         {
           id: "t1",
-          date: new Date().toISOString().slice(0, 10),
+          date: today,
           type: "expense",
           title: "Einkauf Lidl fürs Frühstück",
           amount: 65.00,
-          payerId: "m3",
-          payerName: "Julia",
-          details: "Gutschrift für Julia (+65,00 €)"
+          details: "Ausgelegt von Julia (+65,00 €)",
+          effects: [{ memberId: "m3", name: "Julia", delta: 65.00 }],
+          cashDelta: 0
         },
         {
           id: "t2",
-          date: new Date().toISOString().slice(0, 10),
+          date: today,
           type: "breakfast",
           title: "Freitagsfrühstück (4 Teilnehmer)",
           amount: 20.00,
-          memberIds: ["m1", "m2", "m3", "m5"],
-          details: "Markus, Stefan, Julia, Christian (je -5,00 €)"
+          details: "Markus, Stefan, Julia, Christian (je -5,00 €)",
+          effects: [
+            { memberId: "m1", name: "Markus", delta: -5.00 },
+            { memberId: "m2", name: "Stefan", delta: -5.00 },
+            { memberId: "m3", name: "Julia", delta: -5.00 },
+            { memberId: "m5", name: "Christian", delta: -5.00 }
+          ],
+          cashDelta: 0
         }
       ],
       cashBox: 45.00,
       billedMonths: [curMonth],
       adminMode: "all",
       adminPin: "1100",
+      autoMonthly: true,
       updatedAt: Date.now()
     };
     saveLocalOnly();
@@ -717,10 +996,11 @@
   async function persistState() {
     state.updatedAt = Date.now();
     saveLocalOnly();
+    updateAdminHeaderButton();
     renderAll();
 
     const fbUrl = getFirebaseUrl();
-    if (fbUrl && !isSyncingFromCloud) {
+    if (fbUrl && !isApplyingRemote) {
       try {
         const res = await fetch(`${fbUrl}/kaffeekasse.json`, {
           method: "PUT",
@@ -730,39 +1010,61 @@
         if (!res.ok) throw new Error("HTTP " + res.status);
         setSyncStatus("live", "Live-Sync aktiv");
       } catch (err) {
-        console.error(err);
-        setSyncStatus("error", "Sync-Fehler (Lokal gesichert)");
+        setSyncStatus("error", "Sync-Fehler (Lokal)");
       }
     }
   }
 
-  // --- Firebase Realtime Sync (REST + Server-Sent Events) ---
+  // --- Firebase Cloud-Sync ---
   async function connectFirebase(fbUrl) {
-    setSyncStatus("connecting", "Verbinde Cloud...");
+    setSyncStatus("connecting", "Verbinde...");
     try {
       const res = await fetch(`${fbUrl}/kaffeekasse.json`);
-      if (!res.ok) throw new Error("Verbindung fehlgeschlagen");
+      if (!res.ok) throw new Error("HTTP " + res.status);
       const remoteData = await res.json();
 
       if (remoteData && Array.isArray(remoteData.members)) {
-        isSyncingFromCloud = true;
+        isApplyingRemote = true;
         state = Object.assign(state, remoteData);
         saveLocalOnly();
-        isSyncingFromCloud = false;
+        isApplyingRemote = false;
         checkAndApplyMonthlyFees(true);
       } else {
-        // Erstmalig lokalen Stand in leere Cloud hochladen
         checkAndApplyMonthlyFees(false);
         await persistState();
       }
 
       setSyncStatus("live", "Live-Sync aktiv");
+      updateAdminHeaderButton();
       startFirebaseStream(fbUrl);
       renderAll();
     } catch (e) {
-      setSyncStatus("error", "Cloud nicht erreichbar (Lokal)");
+      setSyncStatus("error", "Cloud offline (Lokal)");
       checkAndApplyMonthlyFees(false);
       renderAll();
+    }
+  }
+
+  async function fetchLatestFromFirebase(showFeedback = false) {
+    const fbUrl = getFirebaseUrl();
+    if (!fbUrl) return;
+    try {
+      const res = await fetch(`${fbUrl}/kaffeekasse.json`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const remoteData = await res.json();
+      if (remoteData && Array.isArray(remoteData.members) && remoteData.updatedAt !== state.updatedAt) {
+        isApplyingRemote = true;
+        state = Object.assign(state, remoteData);
+        saveLocalOnly();
+        updateAdminHeaderButton();
+        renderAll();
+        isApplyingRemote = false;
+      }
+      setSyncStatus("live", "Live-Sync aktiv");
+      if (showFeedback) showToast("Kassenstand aktualisiert.");
+    } catch (e) {
+      setSyncStatus("error", "Verbindung prüfen");
+      if (showFeedback) showToast("Cloud derzeit nicht erreichbar.");
     }
   }
 
@@ -773,35 +1075,71 @@
     }
     try {
       eventSource = new EventSource(`${fbUrl}/kaffeekasse.json`);
-      const handleUpdate = (e) => {
-        try {
-          const payload = JSON.parse(e.data);
-          const data = payload && payload.data ? payload.data : null;
-          if (data && Array.isArray(data.members) && data.updatedAt !== state.updatedAt) {
-            isSyncingFromCloud = true;
-            state = Object.assign(state, data);
-            saveLocalOnly();
-            renderAll();
-            isSyncingFromCloud = false;
-          }
-        } catch (err) {}
+      const scheduleSync = () => {
+        clearTimeout(syncDebounceTimer);
+        syncDebounceTimer = setTimeout(() => fetchLatestFromFirebase(false), 250);
       };
-      eventSource.addEventListener("put", handleUpdate);
-      eventSource.addEventListener("patch", handleUpdate);
-      eventSource.onerror = () => {
-        setSyncStatus("error", "Verbindung unterbrochen");
-      };
-      eventSource.onopen = () => {
-        setSyncStatus("live", "Live-Sync aktiv");
-      };
+      eventSource.addEventListener("put", scheduleSync);
+      eventSource.addEventListener("patch", scheduleSync);
+      eventSource.onopen = () => setSyncStatus("live", "Live-Sync aktiv");
+      eventSource.onerror = () => setSyncStatus("error", "Sync unterbrochen");
     } catch (e) {}
   }
 
+  function manualRefresh() {
+    if (getFirebaseUrl()) {
+      fetchLatestFromFirebase(true);
+    } else {
+      renderAll();
+      showToast("Lokale Ansicht aktualisiert.");
+    }
+  }
+
   function setSyncStatus(mode, text) {
-    const badge = document.getElementById("syncBadge");
-    const label = document.getElementById("syncText");
-    badge.className = "sync-badge " + (mode === "live" ? "live" : mode === "error" ? "error" : "");
-    label.textContent = text;
+    const pill = document.getElementById("syncBadge");
+    pill.className = "status-pill " + (mode === "live" ? "live" : mode === "error" ? "error" : "");
+    document.getElementById("syncText").textContent = text;
+  }
+
+  // --- Admin-Berechtigungen ---
+  function isAdminUnlocked() {
+    if (state.adminMode !== "admins") return true;
+    return sessionStorage.getItem(ADMIN_SESSION_KEY) === state.adminPin;
+  }
+
+  function requireAdmin() {
+    if (isAdminUnlocked()) return true;
+    const entered = prompt("Admin-Modus aktiv. Bitte Admin-PIN eingeben:");
+    if (entered === null) return false;
+    if (entered.trim() === state.adminPin) {
+      sessionStorage.setItem(ADMIN_SESSION_KEY, state.adminPin);
+      updateAdminHeaderButton();
+      showToast("Admin-Modus für diese Sitzung entsperrt.");
+      return true;
+    }
+    alert("Falsche Admin-PIN.");
+    return false;
+  }
+
+  function toggleAdminSession() {
+    if (isAdminUnlocked()) {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      updateAdminHeaderButton();
+      showToast("Admin-Modus wieder gesperrt.");
+    } else {
+      requireAdmin();
+    }
+  }
+
+  function updateAdminHeaderButton() {
+    const btn = document.getElementById("adminLockBtn");
+    const label = document.getElementById("adminLockLabel");
+    if (state.adminMode === "admins") {
+      btn.style.display = "inline-flex";
+      label.textContent = isAdminUnlocked() ? "Admin aktiv" : "Admin gesperrt";
+    } else {
+      btn.style.display = "none";
+    }
   }
 
   // --- Automatische Monatsbeiträge ---
@@ -817,45 +1155,53 @@
   }
 
   function checkAndApplyMonthlyFees(shouldPersist) {
+    if (state.autoMonthly === false) return;
     const curMonth = getCurrentMonthKey();
     if (!Array.isArray(state.billedMonths)) state.billedMonths = [];
     if (state.billedMonths.includes(curMonth) || state.members.length === 0) return;
 
+    executeMonthBilling(curMonth, shouldPersist);
+  }
+
+  function executeMonthBilling(monthKey, shouldPersist) {
     let totalBilled = 0;
-    const affectedIds = [];
+    const effects = [];
+
     state.members.forEach(m => {
       const fee = 3.0 + (m.coffeeFlat ? 5.0 : 0.0);
       m.balance = round2(m.balance - fee);
       totalBilled = round2(totalBilled + fee);
-      affectedIds.push(m.id);
+      effects.push({ memberId: m.id, name: m.name, delta: -fee });
     });
 
-    state.billedMonths.push(curMonth);
+    if (!state.billedMonths.includes(monthKey)) {
+      state.billedMonths.push(monthKey);
+    }
+
     state.transactions.unshift({
       id: "tx_" + Date.now(),
-      date: new Date().toISOString().slice(0, 10),
+      date: getLocalDateISO(),
       type: "monthly",
-      title: `Automatischer Monatsbeitrag (${formatMonthLabel(curMonth)})`,
+      title: `Monatsbeitrag ${formatMonthLabel(monthKey)}`,
       amount: totalBilled,
-      memberIds: affectedIds,
-      details: "3,00 € Grundbeitrag + 5,00 € Kaffee-Flatrate (wenn aktiv)"
+      details: "3,00 € Grundbeitrag + 5,00 € Kaffee-Flat (wenn aktiv)",
+      effects,
+      cashDelta: 0
     });
 
-    showBanner(`📅 Monatsbeiträge für ${formatMonthLabel(curMonth)} wurden automatisch verbucht (3,00 € Grund + 5,00 € Kaffee).`);
+    showToast(`Monatsbeiträge für ${formatMonthLabel(monthKey)} verbucht.`);
     if (shouldPersist) persistState();
   }
 
-  // --- Admin-Schutz ---
-  function checkAdminAccess() {
-    if (state.adminMode !== "admins") return true;
-    const entered = prompt("🔐 Admin-Modus aktiv. Bitte Admin-PIN eingeben:");
-    if (entered === null) return false;
-    if (entered.trim() === state.adminPin) return true;
-    alert("Falsche Admin-PIN!");
-    return false;
+  function triggerManualMonthBilling() {
+    if (!requireAdmin()) return;
+    const curMonth = getCurrentMonthKey();
+    if (!confirm(`Monatsbeiträge für ${formatMonthLabel(curMonth)} (3,00 € Grund + 5,00 € Kaffee) jetzt für alle aktiven Kollegen buchen?`)) return;
+    executeMonthBilling(curMonth, true);
+    closeModal("settingsModal");
   }
 
-  // --- Aktionen ---
+  // --- Freitagsfrühstück ---
   function toggleBreakfastPerson(id) {
     if (selectedBreakfastIds.has(id)) selectedBreakfastIds.delete(id);
     else selectedBreakfastIds.add(id);
@@ -873,42 +1219,45 @@
 
   function bookBreakfast() {
     if (selectedBreakfastIds.size === 0) {
-      alert("Bitte zuerst mindestens einen Teilnehmer beim Frühstück anklicken.");
+      showToast("Bitte zuerst mindestens einen Teilnehmer auswählen.");
       return;
     }
-    if (!checkAdminAccess()) return;
+    if (!requireAdmin()) return;
 
-    const date = document.getElementById("breakfastDate").value || new Date().toISOString().slice(0, 10);
+    const date = document.getElementById("breakfastDate").value || getLocalDateISO();
     const names = [];
-    const ids = Array.from(selectedBreakfastIds);
+    const effects = [];
 
     state.members.forEach(m => {
       if (selectedBreakfastIds.has(m.id)) {
         m.balance = round2(m.balance - 5.00);
         names.push(m.name);
+        effects.push({ memberId: m.id, name: m.name, delta: -5.00 });
       }
     });
 
-    const total = round2(ids.length * 5.00);
+    const total = round2(effects.length * 5.00);
     state.transactions.unshift({
       id: "tx_" + Date.now(),
       date,
       type: "breakfast",
-      title: `Freitagsfrühstück (${ids.length} Teilnehmer)`,
+      title: `Freitagsfrühstück (${effects.length} Teilnehmer)`,
       amount: total,
-      memberIds: ids,
-      details: `${names.join(", ")} (je -5,00 €)`
+      details: `${names.join(", ")} (je -5,00 €)`,
+      effects,
+      cashDelta: 0
     });
 
     selectedBreakfastIds.clear();
-    showBanner(`🥐 Freitagsfrühstück für ${names.join(", ")} (je 5,00 €) verbucht.`);
+    showToast(`Frühstück für ${names.length} Personen (${formatEuro(total)}) verbucht.`);
     persistState();
   }
 
+  // --- Einkäufe / Ausgaben ---
   function openExpenseModal() {
-    if (!checkAdminAccess()) return;
+    if (!requireAdmin()) return;
     const sel = document.getElementById("expPayer");
-    sel.innerHTML = `<option value="CASHBOX">💵 Barkasse (direkt aus Kassette bezahlt)</option>` +
+    sel.innerHTML = `<option value="CASHBOX">Barkasse (direkt aus Kassette bezahlt)</option>` +
       state.members.map(m => `<option value="${m.id}">${escapeHtml(m.name)} (privat ausgelegt)</option>`).join("");
     document.getElementById("expDesc").value = "";
     document.getElementById("expAmount").value = "";
@@ -918,26 +1267,28 @@
   function saveExpense() {
     const payerId = document.getElementById("expPayer").value;
     const desc = document.getElementById("expDesc").value.trim();
-    const amount = parseFloat(document.getElementById("expAmount").value);
-    const date = document.getElementById("expDate").value || new Date().toISOString().slice(0, 10);
+    const amount = round2(parseFloat(document.getElementById("expAmount").value));
+    const date = document.getElementById("expDate").value || getLocalDateISO();
 
     if (!desc || isNaN(amount) || amount <= 0) {
-      alert("Bitte Zweck und einen gültigen Betrag eingeben.");
+      alert("Bitte Verwendungszweck und einen gültigen Betrag eingeben.");
       return;
     }
 
-    let payerName = "Barkasse";
     let details = "";
+    const effects = [];
+    let cashDelta = 0;
 
     if (payerId === "CASHBOX") {
       state.cashBox = round2(state.cashBox - amount);
+      cashDelta = -amount;
       details = `Aus der Barkasse entnommen (-${formatEuro(amount)})`;
     } else {
-      const member = state.members.find(m => m.id === payerId);
-      if (!member) return;
-      payerName = member.name;
-      member.balance = round2(member.balance + amount);
-      details = `Gutschrift für ${member.name} (+${formatEuro(amount)})`;
+      const m = state.members.find(x => x.id === payerId);
+      if (!m) return;
+      m.balance = round2(m.balance + amount);
+      effects.push({ memberId: m.id, name: m.name, delta: amount });
+      details = `Ausgelegt von ${m.name} (+${formatEuro(amount)})`;
     }
 
     state.transactions.unshift({
@@ -945,22 +1296,28 @@
       date,
       type: "expense",
       title: desc,
-      amount: round2(amount),
-      payerId,
-      payerName,
-      details
+      amount,
+      details,
+      effects,
+      cashDelta
     });
 
     closeModal("expenseModal");
-    showBanner(`🛒 Ausgabe „${desc}“ (${formatEuro(amount)}) verbucht.`);
+    showToast(`Einkauf „${desc}“ (${formatEuro(amount)}) verbucht.`);
     persistState();
   }
 
+  // --- Barzahlung & Barkassen-Korrektur ---
   function openCashModal(preselectMemberId = null) {
-    if (!checkAdminAccess()) return;
+    if (!requireAdmin()) return;
+    if (state.members.length === 0) {
+      showToast("Bitte zuerst Kollegen anlegen.");
+      return;
+    }
     const sel = document.getElementById("cashMember");
-    sel.innerHTML = state.members.map(m => `<option value="${m.id}">${escapeHtml(m.name)} (${formatEuro(m.balance)})</option>`).join("");
+    sel.innerHTML = state.members.map(m => `<option value="${m.id}">${escapeHtml(m.name)} (${formatSignedEuro(m.balance)})</option>`).join("");
     if (preselectMemberId) sel.value = preselectMemberId;
+    document.getElementById("cashAmount").value = "";
     document.getElementById("cashNote").value = "";
     updateCashHint();
     openModal("cashModal");
@@ -973,13 +1330,13 @@
     const hint = document.getElementById("cashCurrentHint");
     const dir = document.getElementById("cashDirection");
     if (m.balance < 0) {
-      hint.textContent = `Aktueller Stand: ${formatEuro(m.balance)} (offener Betrag an die Kasse).`;
+      hint.textContent = `Aktueller Stand: ${formatSignedEuro(m.balance)} (offener Betrag an die Kasse).`;
       dir.value = "in";
     } else if (m.balance > 0) {
-      hint.textContent = `Aktueller Stand: +${formatEuro(m.balance)} (Einkaufs-Guthaben).`;
+      hint.textContent = `Aktueller Stand: ${formatSignedEuro(m.balance)} (Einkaufs-Guthaben).`;
       dir.value = "out";
     } else {
-      hint.textContent = `Aktueller Stand: 0,00 € (bereits ausgeglichen).`;
+      hint.textContent = "Aktueller Stand: 0,00 € (bereits ausgeglichen).";
     }
   }
 
@@ -994,7 +1351,7 @@
   function saveCashPayment() {
     const id = document.getElementById("cashMember").value;
     const dir = document.getElementById("cashDirection").value;
-    const amount = parseFloat(document.getElementById("cashAmount").value);
+    const amount = round2(parseFloat(document.getElementById("cashAmount").value));
     const note = document.getElementById("cashNote").value.trim();
 
     if (isNaN(amount) || amount <= 0) {
@@ -1005,31 +1362,88 @@
     const m = state.members.find(x => x.id === id);
     if (!m) return;
 
-    if (dir === "in") {
-      m.balance = round2(m.balance + amount);
-      state.cashBox = round2(state.cashBox + amount);
-    } else {
-      m.balance = round2(m.balance - amount);
-      state.cashBox = round2(state.cashBox - amount);
-    }
+    const delta = dir === "in" ? amount : -amount;
+    m.balance = round2(m.balance + delta);
+    state.cashBox = round2(state.cashBox + delta);
 
     state.transactions.unshift({
       id: "tx_" + Date.now(),
-      date: new Date().toISOString().slice(0, 10),
+      date: getLocalDateISO(),
       type: "cash",
       title: dir === "in" ? `Barzahlung von ${m.name}` : `Barauszahlung an ${m.name}`,
-      amount: round2(amount),
-      memberIds: [m.id],
-      details: note || (dir === "in" ? "In die Barkasse eingezahlt" : "Guthaben bar aus Barkasse ausgezahlt")
+      amount,
+      details: note || (dir === "in" ? "In die Barkasse eingezahlt" : "Guthaben bar ausgezahlt"),
+      effects: [{ memberId: m.id, name: m.name, delta }],
+      cashDelta: delta
     });
 
     closeModal("cashModal");
-    showBanner(`💵 Barzahlung für ${m.name} (${formatEuro(amount)}) gespeichert.`);
+    showToast(`Barzahlung für ${m.name} (${formatEuro(amount)}) erfasst.`);
     persistState();
   }
 
+  function openCashAdjustModal() {
+    if (!requireAdmin()) return;
+    document.getElementById("adjCashAmount").value = state.cashBox.toFixed(2);
+    document.getElementById("adjCashReason").value = "";
+    openModal("cashAdjustModal");
+  }
+
+  function saveCashAdjustment() {
+    const target = round2(parseFloat(document.getElementById("adjCashAmount").value));
+    const reason = document.getElementById("adjCashReason").value.trim() || "Kassenbestand korrigiert";
+    if (isNaN(target)) {
+      alert("Bitte einen gültigen Betrag eingeben.");
+      return;
+    }
+    const diff = round2(target - state.cashBox);
+    if (diff === 0) {
+      closeModal("cashAdjustModal");
+      return;
+    }
+    state.cashBox = target;
+    state.transactions.unshift({
+      id: "tx_" + Date.now(),
+      date: getLocalDateISO(),
+      type: "cash",
+      title: `Barkassen-Korrektur (${formatSignedEuro(diff)})`,
+      amount: Math.abs(diff),
+      details: `${reason} · Neuer Bestand: ${formatEuro(target)}`,
+      effects: [],
+      cashDelta: diff
+    });
+    closeModal("cashAdjustModal");
+    showToast(`Barkasse auf ${formatEuro(target)} aktualisiert.`);
+    persistState();
+  }
+
+  // --- Buchung stornieren ---
+  function deleteTransaction(txId) {
+    if (!requireAdmin()) return;
+    const tx = state.transactions.find(t => t.id === txId);
+    if (!tx) return;
+    if (!confirm(`Buchung „${tx.title}“ (${formatEuro(tx.amount)}) wirklich stornieren und alle betroffenen Stände zurückrechnen?`)) return;
+
+    if (typeof tx.cashDelta === "number" && tx.cashDelta !== 0) {
+      state.cashBox = round2(state.cashBox - tx.cashDelta);
+    }
+    if (Array.isArray(tx.effects)) {
+      tx.effects.forEach(eff => {
+        const m = state.members.find(x => x.id === eff.memberId);
+        if (m) {
+          m.balance = round2(m.balance - eff.delta);
+        }
+      });
+    }
+
+    state.transactions = state.transactions.filter(t => t.id !== txId);
+    showToast("Buchung storniert und Salden zurückgesetzt.");
+    persistState();
+  }
+
+  // --- Kollegen verwalten ---
   function openMemberModal() {
-    if (!checkAdminAccess()) return;
+    if (!requireAdmin()) return;
     document.getElementById("newMemberName").value = "";
     document.getElementById("newMemberCoffee").checked = true;
     document.getElementById("newMemberStartBalance").value = "0.00";
@@ -1039,76 +1453,98 @@
   function saveNewMember() {
     const name = document.getElementById("newMemberName").value.trim();
     const coffeeFlat = document.getElementById("newMemberCoffee").checked;
-    const startBal = parseFloat(document.getElementById("newMemberStartBalance").value) || 0;
+    const startBal = round2(parseFloat(document.getElementById("newMemberStartBalance").value) || 0);
 
     if (!name) {
       alert("Bitte einen Namen eingeben.");
       return;
     }
 
-    state.members.push({
+    const newMember = {
       id: "m_" + Date.now(),
       name,
       coffeeFlat,
-      balance: round2(startBal)
-    });
+      balance: startBal
+    };
+    state.members.push(newMember);
+
+    if (startBal !== 0) {
+      state.transactions.unshift({
+        id: "tx_" + Date.now(),
+        date: getLocalDateISO(),
+        type: "adjustment",
+        title: `Startsaldo ${name}`,
+        amount: Math.abs(startBal),
+        details: `Übertrag bei Aufnahme (${formatSignedEuro(startBal)})`,
+        effects: [{ memberId: newMember.id, name: newMember.name, delta: startBal }],
+        cashDelta: 0
+      });
+    }
 
     closeModal("memberModal");
+    showToast(`${name} zur Kasse hinzugefügt.`);
     persistState();
   }
 
-  // --- Detailansicht Kollege ---
   function openMemberDetail(memberId) {
     const m = state.members.find(x => x.id === memberId);
     if (!m) return;
 
-    document.getElementById("detailTitle").textContent = `Kontoauszug: ${m.name}`;
+    document.getElementById("detailTitle").textContent = `Kontoauszug · ${m.name}`;
     const relTx = state.transactions.filter(t =>
-      t.payerId === m.id || (Array.isArray(t.memberIds) && t.memberIds.includes(m.id))
+      Array.isArray(t.effects) && t.effects.some(e => e.memberId === m.id)
     );
 
-    const statusInfo = getEquilibriumBadge(m.balance);
+    const statusBadge = getStatusPill(m.balance);
 
     document.getElementById("detailBody").innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center; background:var(--surface-alt); padding:14px; border-radius:12px; border:1px solid var(--border); margin-bottom:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; background:var(--surface-subtle); padding:15px; border-radius:10px; border:1px solid var(--border); margin-bottom:16px;">
         <div>
-          <div style="font-size:0.8rem; color:var(--text-muted);">Aktueller Stand</div>
-          <div style="font-size:1.5rem; font-weight:800;" class="${m.balance > 0 ? 'text-pos' : m.balance < 0 ? 'text-neg' : 'text-neu'}">
-            ${m.balance > 0 ? '+' : ''}${formatEuro(m.balance)}
+          <div style="font-size:0.76rem; font-weight:600; text-transform:uppercase; color:var(--ink-muted);">Aktueller Stand</div>
+          <div class="num ${m.balance > 0 ? 'c-pos' : m.balance < 0 ? 'c-neg' : 'c-neu'}" style="font-size:1.55rem; font-weight:700; margin:2px 0;">
+            ${formatSignedEuro(m.balance)}
           </div>
-          <div style="margin-top:4px;">${statusInfo.html}</div>
+          ${statusBadge}
         </div>
         <div style="display:flex; flex-direction:column; gap:6px;">
-          <button class="btn btn-success btn-sm" onclick="closeModal('detailModal'); openCashModal('${m.id}')">💵 Bar ausgleichen</button>
-          <button class="btn btn-outline btn-sm" onclick="toggleMemberCoffee('${m.id}')">
-            ☕ Kaffee-Flat: ${m.coffeeFlat ? 'AN (5 €)' : 'AUS (0 €)'}
+          <button class="btn btn-dark btn-sm" onclick="closeModal('detailModal'); openCashModal('${m.id}')">Bar ausgleichen</button>
+          <button class="btn btn-surface btn-sm" onclick="toggleMemberCoffee('${m.id}')">
+            Kaffee-Flat: ${m.coffeeFlat ? 'Aktiv (5 €)' : 'Aus (0 €)'}
           </button>
         </div>
       </div>
 
-      <h4 style="font-size:0.9rem; margin-bottom:8px;">Beteiligte Buchungen (${relTx.length})</h4>
+      <div style="font-size:0.84rem; font-weight:700; margin-bottom:8px;">Einzelbuchungen (${relTx.length})</div>
       <div style="border:1px solid var(--border); border-radius:10px; overflow:hidden;">
-        ${relTx.length === 0 ? `<div style="padding:14px; color:var(--text-muted); font-size:0.85rem;">Noch keine Buchungen vorhanden.</div>` :
-          relTx.map(t => `
-            <div class="tx-item">
-              <div>
-                <div class="tx-title">${escapeHtml(t.title)}</div>
-                <div class="tx-sub">${t.date} · ${escapeHtml(t.details || '')}</div>
-              </div>
-              <div class="tx-right"><strong>${formatEuro(t.amount)}</strong></div>
-            </div>
-          `).join("")}
+        ${relTx.length === 0
+          ? `<div style="padding:14px; font-size:0.84rem; color:var(--ink-muted);">Keine Buchungen für ${escapeHtml(m.name)} vorhanden.</div>`
+          : relTx.map(t => {
+              const eff = t.effects.find(e => e.memberId === m.id);
+              const val = eff ? eff.delta : 0;
+              return `
+                <div class="tx-row">
+                  <div>
+                    <div class="tx-title">${escapeHtml(t.title)}</div>
+                    <div class="tx-meta">${formatDateDE(t.date)} · ${escapeHtml(t.details || '')}</div>
+                  </div>
+                  <div class="tx-amount num ${val > 0 ? 'c-pos' : val < 0 ? 'c-neg' : ''}">
+                    ${formatSignedEuro(val)}
+                  </div>
+                </div>
+              `;
+            }).join("")}
       </div>
 
-      <div style="margin-top:16px; text-align:right;">
-        <button class="btn btn-danger btn-sm" onclick="deleteMember('${m.id}')">Kollege entfernen</button>
+      <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
+        <span class="hint">Monatsbeitrag: ${m.coffeeFlat ? '8,00 €' : '3,00 €'}</span>
+        <button class="btn btn-danger-soft btn-sm" onclick="deleteMember('${m.id}')">Kollege entfernen</button>
       </div>
     `;
     openModal("detailModal");
   }
 
   function toggleMemberCoffee(memberId) {
-    if (!checkAdminAccess()) return;
+    if (!requireAdmin()) return;
     const m = state.members.find(x => x.id === memberId);
     if (!m) return;
     m.coffeeFlat = !m.coffeeFlat;
@@ -1117,21 +1553,27 @@
   }
 
   function deleteMember(memberId) {
-    if (!checkAdminAccess()) return;
+    if (!requireAdmin()) return;
     const m = state.members.find(x => x.id === memberId);
     if (!m) return;
-    if (!confirm(`Kollege „${m.name}“ wirklich aus der Liste entfernen?`)) return;
+    const warn = m.balance !== 0
+      ? `Achtung: ${m.name} hat noch einen offenen Stand von ${formatSignedEuro(m.balance)}! Trotzdem entfernen?`
+      : `Kollege „${m.name}“ wirklich aus der Liste entfernen?`;
+    if (!confirm(warn)) return;
+
     state.members = state.members.filter(x => x.id !== memberId);
     selectedBreakfastIds.delete(memberId);
     closeModal("detailModal");
+    showToast(`${m.name} entfernt.`);
     persistState();
   }
 
-  // --- Einstellungen & Cloud ---
+  // --- Einstellungen ---
   function openSettingsModal() {
     document.getElementById("cfgFirebaseUrl").value = getFirebaseUrl();
     document.getElementById("cfgAdminMode").value = state.adminMode || "all";
     document.getElementById("cfgAdminPin").value = state.adminPin || "1100";
+    document.getElementById("cfgAutoMonthly").checked = state.autoMonthly !== false;
     document.getElementById("inviteLinkBox").style.display = "none";
     openModal("settingsModal");
   }
@@ -1141,8 +1583,8 @@
     if (!raw) {
       localStorage.removeItem(URL_KEY);
       if (eventSource) eventSource.close();
-      setSyncStatus("offline", "Lokal (Offline)");
-      alert("Cloud-URL entfernt. Die App läuft wieder rein lokal.");
+      setSyncStatus("offline", "Lokal gespeichert");
+      showToast("Cloud-Sync deaktiviert.");
       return;
     }
     if (!raw.startsWith("https://")) {
@@ -1152,13 +1594,13 @@
     const clean = cleanFirebaseUrl(raw);
     localStorage.setItem(URL_KEY, clean);
     await connectFirebase(clean);
-    alert("Cloud-Verbindung erfolgreich geprüft und gespeichert!");
+    showToast("Cloud-Datenbank verbunden.");
   }
 
   function copyInviteLink() {
     const fbUrl = getFirebaseUrl();
     if (!fbUrl) {
-      alert("Bitte zuerst oben eure Firebase-URL eintragen und speichern.");
+      alert("Bitte zuerst oben eure Firebase-URL eintragen und verbinden.");
       return;
     }
     const baseUrl = window.location.origin + window.location.pathname;
@@ -1169,47 +1611,51 @@
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(inviteUrl).then(() => {
-        showBanner("📲 Einladungs-Link für WhatsApp in die Zwischenablage kopiert!");
+        showToast("Einladungslink in Zwischenablage kopiert.");
       });
     }
   }
 
   function saveAdminSettings() {
-    if (!checkAdminAccess()) return;
+    if (!requireAdmin()) return;
     state.adminMode = document.getElementById("cfgAdminMode").value;
     state.adminPin = document.getElementById("cfgAdminPin").value.trim() || "1100";
+    state.autoMonthly = document.getElementById("cfgAutoMonthly").checked;
+    if (state.adminMode === "admins") {
+      sessionStorage.setItem(ADMIN_SESSION_KEY, state.adminPin);
+    }
     persistState();
-    alert("Berechtigungen gespeichert.");
+    showToast("Einstellungen gespeichert.");
   }
 
   function resetForProduction() {
-    if (!checkAdminAccess()) return;
-    if (!confirm("Sollen alle Buchungen und Barkassen-Beträge auf 0,00 € zurückgesetzt werden (Kollegenliste bleibt erhalten)?")) return;
+    if (!requireAdmin()) return;
+    if (!confirm("Sollen alle Buchungen, Salden und die Barkasse für den Echtstart auf 0,00 € zurückgesetzt werden? (Die Namen der Kollegen bleiben erhalten.)")) return;
     state.members.forEach(m => m.balance = 0);
     state.transactions = [];
     state.cashBox = 0;
     state.billedMonths = [getCurrentMonthKey()];
     closeModal("settingsModal");
-    showBanner("✅ Kasse wurde für den Echtstart auf 0,00 € zurückgesetzt.");
+    showToast("Kasse für den Echtstart auf 0,00 € zurückgesetzt.");
     persistState();
   }
 
   // --- Exporte & Backups ---
   function exportCSV() {
-    const lines = [
-      "Typ;Datum;Name / Titel;Betrag EUR;Details"
-    ];
+    const today = getLocalDateISO();
+    const lines = ["Kategorie;Datum;Bezeichnung;Betrag_EUR;Details"];
+    lines.push(`Barkasse;${today};Bargeldbestand Kassette;${state.cashBox.toFixed(2).replace(".", ",")};Physischer Bestand`);
     state.members.forEach(m => {
-      lines.push(`Kassenstand;${new Date().toISOString().slice(0,10)};${m.name};${m.balance.toFixed(2).replace('.', ',')};Kaffee-Flat: ${m.coffeeFlat ? 'Ja' : 'Nein'}`);
+      lines.push(`Kollege;${today};${m.name};${m.balance.toFixed(2).replace(".", ",")};Kaffee-Flat: ${m.coffeeFlat ? "Ja (8 EUR/Monat)" : "Nein (3 EUR/Monat)"}`);
     });
     state.transactions.forEach(t => {
-      lines.push(`Buchung;${t.date};${t.title.replace(/;/g, ',')};${t.amount.toFixed(2).replace('.', ',')};${(t.details || '').replace(/;/g, ',')}`);
+      lines.push(`Buchung;${formatDateDE(t.date)};${t.title.replace(/;/g, ",")};${t.amount.toFixed(2).replace(".", ",")};${(t.details || "").replace(/;/g, ",")}`);
     });
-    downloadFile("\uFEFF" + lines.join("\n"), `Kaffeekasse_Kripo_Duelmen_${new Date().toISOString().slice(0,10)}.csv`, "text/csv;charset=utf-8;");
+    downloadFile("\uFEFF" + lines.join("\n"), `Tatort_Kaffeekasse_${today}.csv`, "text/csv;charset=utf-8;");
   }
 
   function exportJSON() {
-    downloadFile(JSON.stringify(state, null, 2), `Kaffeekasse_Backup_${new Date().toISOString().slice(0,10)}.json`, "application/json");
+    downloadFile(JSON.stringify(state, null, 2), `Tatort_Kaffeekasse_Backup_${getLocalDateISO()}.json`, "application/json");
   }
 
   function importJSON(event) {
@@ -1223,7 +1669,7 @@
         state = Object.assign(state, parsed);
         persistState();
         closeModal("settingsModal");
-        showBanner("✅ JSON-Backup erfolgreich wiederhergestellt.");
+        showToast("Backup erfolgreich eingespielt.");
       } catch (err) {
         alert("Fehler beim Laden der Backup-Datei.");
       }
@@ -1243,60 +1689,71 @@
 
   // --- Rendering ---
   function renderAll() {
-    // KPIs
+    const totalDebt = round2(state.members.reduce((sum, m) => m.balance < 0 ? sum + Math.abs(m.balance) : sum, 0));
+    const totalCredit = round2(state.members.reduce((sum, m) => m.balance > 0 ? sum + m.balance : sum, 0));
+
     document.getElementById("kpiCash").textContent = formatEuro(state.cashBox);
-    const netSum = round2(state.members.reduce((acc, m) => acc + m.balance, 0));
-    const netEl = document.getElementById("kpiNet");
-    netEl.textContent = (netSum > 0 ? "+" : "") + formatEuro(netSum);
-    netEl.className = "kpi-value " + (netSum > 0 ? "text-pos" : netSum < 0 ? "text-neg" : "");
+    document.getElementById("kpiDebt").textContent = formatEuro(totalDebt);
+    document.getElementById("kpiCredit").textContent = formatEuro(totalCredit);
     document.getElementById("kpiMonth").textContent = formatMonthLabel(getCurrentMonthKey());
 
-    // Mitgliederliste
-    document.getElementById("memberCountBadge").textContent = `${state.members.length} Personen`;
+    // Mitglieder sortieren & rendern
+    const sortMode = document.getElementById("memberSort").value;
+    const sortedMembers = [...state.members].sort((a, b) => {
+      if (sortMode === "balance_asc") return a.balance - b.balance;
+      if (sortMode === "balance_desc") return b.balance - a.balance;
+      return a.name.localeCompare(b.name, "de");
+    });
+
+    document.getElementById("memberCountBadge").textContent = sortedMembers.length;
     const listEl = document.getElementById("memberList");
-    if (state.members.length === 0) {
-      listEl.innerHTML = `<div style="padding:20px; text-align:center; color:var(--text-muted);">Noch keine Kollegen angelegt.</div>`;
+
+    if (sortedMembers.length === 0) {
+      listEl.innerHTML = `<div style="padding:22px; text-align:center; color:var(--ink-muted); font-size:0.86rem;">Noch keine Kollegen angelegt.</div>`;
     } else {
-      listEl.innerHTML = state.members.map(m => {
-        const status = getEquilibriumBadge(m.balance);
-        const cls = m.balance > 0 ? "text-pos" : m.balance < 0 ? "text-neg" : "text-neu";
+      listEl.innerHTML = sortedMembers.map(m => {
+        const cls = m.balance > 0 ? "c-pos" : m.balance < 0 ? "c-neg" : "c-neu";
         return `
           <div class="member-row" onclick="openMemberDetail('${m.id}')">
-            <div class="member-info">
-              <div class="member-name">
-                ${escapeHtml(m.name)}
-                ${status.html}
+            <div class="member-main">
+              <div class="member-name-line">
+                <span>${escapeHtml(m.name)}</span>
+                ${getStatusPill(m.balance)}
               </div>
-              <div class="member-meta">
-                Monatsbeitrag: ${m.coffeeFlat ? "8,00 € (3 € Grund + 5 € Kaffee)" : "3,00 € (nur Grundbeitrag)"}
+              <div class="member-sub">
+                Monatsbeitrag: ${m.coffeeFlat ? "8,00 € (Grund + Kaffee)" : "3,00 € (nur Grundbeitrag)"}
               </div>
             </div>
-            <div class="balance-box">
-              <div class="balance-amount ${cls}">${m.balance > 0 ? "+" : ""}${formatEuro(m.balance)}</div>
-              <div style="font-size:0.74rem; color:var(--text-muted);">Details ›</div>
+            <div class="member-right">
+              <span class="balance-val num ${cls}">${formatSignedEuro(m.balance)}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a8a29e" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
           </div>
         `;
       }).join("");
     }
 
-    // Frühstücks-Chips
     renderBreakfastChips();
 
-    // Buchungshistorie
-    document.getElementById("txCountLabel").textContent = `${state.transactions.length} Einträge`;
+    // Buchungsjournal filtern & rendern
+    const filter = document.getElementById("txFilter").value;
+    const filteredTx = state.transactions.filter(t => filter === "all" || t.type === filter);
     const txEl = document.getElementById("txList");
-    if (state.transactions.length === 0) {
-      txEl.innerHTML = `<div style="padding:18px; text-align:center; color:var(--text-muted); font-size:0.86rem;">Noch keine Buchungen erfasst.</div>`;
+
+    if (filteredTx.length === 0) {
+      txEl.innerHTML = `<div style="padding:20px; text-align:center; color:var(--ink-muted); font-size:0.85rem;">Keine Buchungen in dieser Ansicht.</div>`;
     } else {
-      txEl.innerHTML = state.transactions.slice(0, 25).map(t => `
-        <div class="tx-item">
+      txEl.innerHTML = filteredTx.slice(0, 30).map(t => `
+        <div class="tx-row">
           <div>
             <div class="tx-title">${escapeHtml(t.title)}</div>
-            <div class="tx-sub">${t.date} · ${escapeHtml(t.details || "")}</div>
+            <div class="tx-meta">${formatDateDE(t.date)} · ${escapeHtml(t.details || "")}</div>
           </div>
-          <div class="tx-right">
-            <strong>${formatEuro(t.amount)}</strong>
+          <div class="tx-actions">
+            <span class="tx-amount num">${formatEuro(t.amount)}</span>
+            <button class="undo-btn" onclick="deleteTransaction('${t.id}')" title="Buchung stornieren">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
           </div>
         </div>
       `).join("");
@@ -1305,35 +1762,53 @@
 
   function renderBreakfastChips() {
     const wrap = document.getElementById("breakfastChips");
-    wrap.innerHTML = state.members.map(m => {
+    const sorted = [...state.members].sort((a, b) => a.name.localeCompare(b.name, "de"));
+    wrap.innerHTML = sorted.map(m => {
       const active = selectedBreakfastIds.has(m.id);
-      return `<div class="person-chip ${active ? 'selected' : ''}" onclick="toggleBreakfastPerson('${m.id}')">
-        ${active ? '✓ ' : ''}${escapeHtml(m.name)}
-      </div>`;
+      return `<div class="chip ${active ? 'active' : ''}" onclick="toggleBreakfastPerson('${m.id}')">${escapeHtml(m.name)}</div>`;
     }).join("");
-    document.getElementById("breakfastTotalPreview").textContent = formatEuro(selectedBreakfastIds.size * 5.0);
+    const count = selectedBreakfastIds.size;
+    document.getElementById("breakfastPreview").textContent = `(${count} Pers. · ${formatEuro(count * 5.0)})`;
   }
 
-  function getEquilibriumBadge(balance) {
+  function getStatusPill(balance) {
     if (Math.abs(balance) <= EQUILIBRIUM_LIMIT) {
-      return { html: `<span class="badge badge-ok">Im Ausgleich (± 0)</span>` };
+      return `<span class="pill pill-ok">Im Ausgleich (± 0)</span>`;
     }
     if (balance > EQUILIBRIUM_LIMIT) {
-      return { html: `<span class="badge badge-neutral">Einkaufs-Guthaben</span>` };
+      return `<span class="pill pill-credit">Einkaufs-Guthaben</span>`;
     }
-    return { html: `<span class="badge badge-warn">Mal einkaufen / Bar zahlen</span>` };
+    return `<span class="pill pill-warn">Mal einkaufen / Bar zahlen</span>`;
   }
 
   // --- Hilfsfunktionen ---
   function openModal(id) { document.getElementById(id).classList.add("open"); }
   function closeModal(id) { document.getElementById(id).classList.remove("open"); }
-  function showBanner(msg) {
-    document.getElementById("infoBannerText").textContent = msg;
-    document.getElementById("infoBanner").classList.remove("hidden");
+
+  let toastTimer = null;
+  function showToast(msg) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("show"), 3200);
   }
-  function hideBanner() { document.getElementById("infoBanner").classList.add("hidden"); }
+
   function round2(n) { return Math.round((n + Number.EPSILON) * 100) / 100; }
   function formatEuro(n) { return (n || 0).toFixed(2).replace(".", ",") + " €"; }
+  function formatSignedEuro(n) {
+    const val = round2(n || 0);
+    return (val > 0 ? "+" : "") + val.toFixed(2).replace(".", ",") + " €";
+  }
+  function getLocalDateISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }
+  function formatDateDE(iso) {
+    if (!iso || !iso.includes("-")) return iso || "";
+    const [y, m, d] = iso.split("-");
+    return `${d}.${m}.${y}`;
+  }
   function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, s => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[s]));
   }
