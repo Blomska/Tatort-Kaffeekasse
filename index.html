@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tatort-Kaffeekasse · Kripo Dülmen</title>
+  <style>
+    :root {
+      --bg: #f5f3ef;
+      --surface: #ffffff;
+      --surface-subtle: #faf9f6;
+      --header-bg: #1c1917;
+      --header-border: #292524;
+      --ink: #1c1917;
+      --ink-secondary: #57534e;
+      --ink-muted: #78716c;
+      --border: #e6e2da;
+      --border-strong: #d6d0c4;
+      --accent: #9a3412;
+      --accent-hover: #7c2d12;
+      --accent-soft: #ffedd5;
+      --pos: #15803d;
+      --pos-bg: #dcfce7;
+      --neg: #b91c1c;
+      --neg-bg: #fee2e2;
+      --warn: #b45309;
+      --warn-bg: #fef3c7;
+      --radius: 12px;
+      --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.05);
+      --shadow-md: 0 10px 28px rgba(28, 25, 23, 0.14);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.48;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 64px;
+    }
+
+    .num { font-variant-numeric: tabular-nums; }
+
+    /* Header */
+    header {
+      background: var(--header-bg);
+      color: #fafaf9;
+      border-bottom: 1px solid var(--header-border);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .header-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #292524;
+      border: 1px solid #44403c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fdba74;
+      flex-shrink: 0;
+    }
+    .brand h1 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+    }
+    .brand p {
+      font-size: 0.78rem;
+      color: #a8a29e;
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      background: #292524;
+      color: #d6d3d1;
+      border: 1px solid #44403c;
+      cursor: pointer;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #78716c;
+    }
+    .status-pill.live .status-dot { background: #22c55e; box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2); }
+    .status-pill.error .status-dot { background: #ef4444; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px 14px;
+      border-radius: 9px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-dark { background: var(--ink); color: #fff; }
+    .btn-dark:hover { background: #292524; }
+
+    .btn-surface {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-surface:hover { background: var(--surface-subtle); }
+
+    .btn-toggle-on {
+      background: var(--pos-bg);
+      color: var(--pos);
+      border-color: #bbf7d0;
+    }
+    .btn-toggle-on:hover { background: #bbf7d0; }
+
+    .btn-header {
+      background: #292524;
+      color: #f5f5f4;
+      border-color: #44403c;
+    }
+    .btn-header:hover { background: #3f3b38; }
+
+    .btn-danger-soft {
+      background: var(--neg-bg);
+      color: var(--neg);
+      border-color: #fecaca;
+    }
+    .btn-danger-soft:hover { background: #fecaca; }
+
+    .btn-sm { padding: 6px 10px; font-size: 0.79rem; border-radius: 7px; }
+
+    /* Layout */
+    .container {
+      max-width: 1140px;
+      margin: 22px auto 0;
+      padding: 0 18px;
+    }
+
+    /* KPI Strip */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px 18px;
+      box-shadow: var(--shadow-sm);
+    }
+    .kpi-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-muted);
+    }
+    .kpi-value {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-top: 6px;
+    }
+    .kpi-sub {
+      font-size: 0.78rem;
+      color: var(--ink-secondary);
+      margin-top: 3px;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Main 2-Column Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .panel-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .panel-title {
+      font-size: 0.94rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-body { padding: 16px 18px; }
+
+    /* Member Rows */
+    .member-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.12s ease;
+      gap: 12px;
+    }
+    .member-row:last-child { border-bottom: none; }
+    .member-row:hover { background: var(--surface-subtle); }
+
+    .member-main { display: flex; flex-direction: column; gap: 3px; }
+    .member-name-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-weight: 650;
+      font-size: 0.95rem;
+    }
+    .member-sub {
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.71rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .pill-ok { background: var(--pos-bg); color: var(--pos); }
+    .pill-credit { background: #e0f2fe; color: #0369a1; }
+    .pill-warn { background: var(--warn-bg); color: var(--warn); }
+    .pill-muted { background: #ece8e1; color: var(--ink-secondary); }
+
+    .member-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: right;
+    }
+    .balance-val {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .c-pos { color: var(--pos); }
+    .c-neg { color: var(--neg); }
+    .c-neu { color: var(--ink); }
+
+    /* Breakfast Chips */
+    .chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 12px 0 16px;
+    }
+    .chip {
+      padding: 7px 13px;
+      border-radius: 8px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.12s ease;
+    }
+    .chip:hover { border-color: var(--ink-muted); }
+    .chip.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    .breakfast-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Transaction Ledger */
+    .tx-row {
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .tx-row:last-child { border-bottom: none; }
+    .tx-title { font-size: 0.88rem; font-weight: 600; }
+    .tx-meta { font-size: 0.77rem; color: var(--ink-muted); margin-top: 2px; }
+    .tx-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .tx-amount { font-size: 0.9rem; font-weight: 700; }
+
+    .undo-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--ink-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .undo-btn:hover {
+      background: var(--neg-bg);
+      color: var(--neg);
+    }
+
+    /* Select / Inputs */
+    .select-sm {
+      padding: 5px 9px;
+      font-size: 0.78rem;
+      border-radius: 7px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--ink);
+      font-family: inherit;
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--ink);
+    }
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: var(--surface);
+      color: var(--ink);
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(154, 52, 18, 0.12);
+    }
+    .hint { font-size: 0.76rem; color: var(--ink-muted); margin-top: 4px; }
+
+    /* Modals */
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 25, 23, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+    .backdrop.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border-radius: 14px;
+      max-width: 520px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+    }
+    .modal-head {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      z-index: 2;
+    }
+    .modal-head h3 { font-size: 1rem; font-weight: 700; }
+    .modal-body { padding: 18px 20px; }
+    .modal-foot {
+      padding: 13px 20px;
+      border-top: 1px solid var(--border);
+      background: var(--surface-subtle);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+    .mono-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 9px 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem;
+      word-break: break-all;
+      color: var(--ink);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--header-bg);
+      color: #fafaf9;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-md);
+      border: 1px solid #44403c;
+      transform: translateY(120%);
+      opacity: 0;
+      transition: all 0.22s ease;
+      z-index: 200;
+      max-width: 90vw;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Tatort-Kaffeekasse</h1>
+        <p>Kripo Dülmen · Frühstück, Einkäufe &amp; Barkasse</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button id="adminLockBtn" class="btn btn-header btn-sm" style="display:none;" onclick="toggleAdminSession()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span id="adminLockLabel">Gesperrt</span>
+      </button>
+
+      <div id="syncBadge" class="status-pill" onclick="openSettingsModal()" title="Cloud-Synchronisation konfigurieren">
+        <span class="status-dot"></span>
+        <span id="syncText">Lokal gespeichert</span>
+      </div>
+
+      <button class="btn btn-header btn-sm" onclick="manualRefresh()" title="Jetzt synchronisieren">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+      </button>
+
+      <button class="btn btn-header btn-sm" onclick="openSettingsModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Einstellungen</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <!-- KPI-Leiste -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <span>Barkasse (Kassette)</span>
+        <button class="btn btn-surface btn-sm" style="padding:2px 7px; font-size:0.72rem;" onclick="openCashAdjustModal()">Korrektur</button>
+      </div>
+      <div class="kpi-value num" id="kpiCash">0,00 €</div>
+      <div class="kpi-sub">Physischer Bargeldbestand vor Ort</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-top"><span>Offene Minus-Stände</span></div>
+      <div class="kpi-value num c-neg" id="kpiDebt">0,00 €</div>
+      <div class="kpi-sub">Summe aller offenen Beträge an die Kasse</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-top"><span>Einkaufs-Guthaben</span></div>
+      <div class="kpi-value num c-pos" id="kpiCredit">0,00 €</div>
+      <div class="kpi-sub">Ausgelegte Einkäufe zum Verrechnen</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-top"><span>Abrechnungsmonat</span></div>
+      <div class="kpi-value" id="kpiMonth" style="font-size:1.3rem;">-</div>
+      <div class="kpi-sub" id="kpiRatesSub">3,00 € Grund + 2,00 € Kaffee-Flat</div>
+    </div>
+  </div>
+
+  <!-- Aktionsleiste -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button class="btn btn-primary" onclick="openExpenseModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Ausgabe / Einkauf</span>
+      </button>
+      <button class="btn btn-dark" onclick="openCashModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+        <span>Barzahlung / Ausgleich</span>
+      </button>
+      <button class="btn btn-surface" onclick="openMemberModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        <span>Kollege hinzufügen</span>
+      </button>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-surface btn-sm" onclick="exportCSV()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Excel-Export (CSV)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Hauptbereich -->
+  <div class="main-grid">
+    <!-- Linke Spalte: Kollegenliste -->
+    <div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>Kollegen &amp; Kontostände</span>
+            <span class="pill pill-muted num" id="memberCountBadge">0</span>
+          </div>
+          <select id="memberSort" class="select-sm" onchange="renderAll()">
+            <option value="name">Sortieren: A–Z</option>
+            <option value="balance_asc">Größtes Minus zuerst</option>
+            <option value="balance_desc">Größtes Guthaben zuerst</option>
+          </select>
+        </div>
+        <div id="memberList"></div>
+      </div>
+    </div>
+
+    <!-- Rechte Spalte: Frühstück + Buchungsverlauf -->
+    <div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Freitagsfrühstück (5,00 € p. P.)</div>
+          <button class="btn btn-surface btn-sm" onclick="toggleAllBreakfast()">Alle / Keine</button>
+        </div>
+        <div class="panel-body">
+          <p style="font-size:0.83rem; color:var(--ink-secondary);">
+            Teilnehmer auswählen. Jedem ausgewählten Kollegen werden automatisch <strong>5,00 €</strong> belastet.
+          </p>
+          <div id="breakfastChips" class="chip-wrap"></div>
+          <div class="breakfast-footer">
+            <input type="date" id="breakfastDate" class="form-control" style="max-width:155px;" />
+            <button class="btn btn-primary" style="flex:1;" onclick="bookBreakfast()">
+              <span>Frühstück verbuchen</span>
+              <span class="num" id="breakfastPreview">(0 Pers. · 0,00 €)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Buchungsjournal</div>
+          <select id="txFilter" class="select-sm" onchange="renderAll()">
+            <option value="all">Alle Buchungen</option>
+            <option value="breakfast">Nur Frühstück</option>
+            <option value="expense">Nur Einkäufe</option>
+            <option value="cash">Nur Barzahlungen</option>
+            <option value="monthly">Nur Monatsbeiträge</option>
+          </select>
+        </div>
+        <div id="txList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Ausgabe / Einkauf -->
+<div id="expenseModal" class="backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Ausgabe / Einkauf eintragen</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('expenseModal')">Schließen</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Bezahlt von</label>
+        <select id="expPayer" class="form-control"></select>
+        <div class="hint">Bei privater Auslage wird der Betrag dem Kollegen als Guthaben gutgeschrieben.</div>
+      </div>
+      <div class="form-group">
+        <label>Verwendungszweck</label>
+        <input type="text" id="expDesc" class="form-control" placeholder="z. B. Einkauf Lidl fürs Frühstück, Kaffeebohnen..." />
+      </div>
+      <div class="form-group">
+        <label>Betrag (€)</label>
+        <input type="number" id="expAmount" class="form-control" step="0.01" min="0.01" placeholder="65.00" />
+      </div>
+      <div class="form-group">
+        <label>Datum</label>
+        <input type="date" id="expDate" class="form-control" />
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-surface" onclick="closeModal('expenseModal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveExpense()">Einkauf verbuchen</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Barzahlung -->
+<div id="cashModal" class="backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Barzahlung / Ausgleich erfassen</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('cashModal')">Schließen</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Kollege</label>
+        <select id="cashMember" class="form-control" onchange="updateCashHint()"></select>
+        <div id="cashCurrentHint" class="hint"></div>
+      </div>
+      <div class="form-group">
+        <label>Richtung der Zahlung</label>
+        <select id="cashDirection" class="form-control">
+          <option value="in">Einzahlung in die Barkasse (Kollege zahlt bar ein)</option>
+          <option value="out">Auszahlung aus der Barkasse (Guthaben bar auszahlen)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Betrag (€)</label>
+        <div style="display:flex; gap:8px;">
+          <input type="number" id="cashAmount" class="form-control" step="0.01" min="0.01" placeholder="0.00" />
+          <button type="button" class="btn btn-surface btn-sm" onclick="fillExactBalance()">Auf 0,00 € setzen</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Bemerkung (optional)</label>
+        <input type="text" id="cashNote" class="form-control" placeholder="z. B. Bar ausgeglichen" />
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-surface" onclick="closeModal('cashModal')">Abbrechen</button>
+      <button class="btn btn-dark" onclick="saveCashPayment()">Barzahlung verbuchen</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Barkasse Korrektur -->
+<div id="cashAdjustModal" class="backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Barkasse (Kassette) korrigieren</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('cashAdjustModal')">Schließen</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" style="margin-bottom:12px;">
+        Falls beim Zählen der Kassette ein abweichender Bargeldbestand festgestellt wird (z. B. Startbestand bei Einführung der App), kannst du ihn hier anpassen.
+      </p>
+      <div class="form-group">
+        <label>Gezählter Bargeldbestand (€)</label>
+        <input type="number" id="adjCashAmount" class="form-control" step="0.01" />
+      </div>
+      <div class="form-group">
+        <label>Begründung</label>
+        <input type="text" id="adjCashReason" class="form-control" placeholder="z. B. Startbestand Kassette gezählt" />
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-surface" onclick="closeModal('cashAdjustModal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveCashAdjustment()">Bestand übernehmen</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Kollege hinzufügen -->
+<div id="memberModal" class="backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Neuen Kollegen anlegen</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('memberModal')">Schließen</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="newMemberName" class="form-control" placeholder="z. B. Müller" />
+      </div>
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="newMemberBaseFee" checked />
+          <span id="newMemberBaseLabel">Grundbeitrag aktiv (3,00 € / Monat)</span>
+        </label>
+      </div>
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="newMemberCoffee" checked />
+          <span id="newMemberCoffeeLabel">Kaffee-Flatrate aktiv (2,00 € / Monat)</span>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Übertrag / Startsaldo (€)</label>
+        <input type="number" id="newMemberStartBalance" class="form-control" step="0.01" value="0.00" />
+        <div class="hint">Positiv = Guthaben, Negativ (z. B. -10.00) = offener Betrag aus alter Liste.</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-surface" onclick="closeModal('memberModal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveNewMember()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Kontoauszug Kollege -->
+<div id="detailModal" class="backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="detailTitle">Kontoauszug</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('detailModal')">Schließen</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+  </div>
+</div>
+
+<!-- MODAL: Einstellungen & Cloud-Sync -->
+<div id="settingsModal" class="backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Cloud-Sync &amp; Einstellungen</h3>
+      <button class="btn btn-surface btn-sm" onclick="closeModal('settingsModal')">Schließen</button>
+    </div>
+    <div class="modal-body">
+      <h4 style="font-size:0.92rem; margin-bottom:4px;">Echtzeit-Synchronisation (Firebase)</h4>
+      <p class="hint" style="margin-bottom:10px;">
+        Hinterlege eure kostenlose Firebase Realtime Database URL, damit alle Smartphones und Dienstrechner denselben Kassenstand sehen.
+      </p>
+      <div class="form-group">
+        <label>Firebase Realtime Database URL</label>
+        <input type="url" id="cfgFirebaseUrl" class="form-control" placeholder="https://euer-projekt-default-rtdb.europe-west1.firebasedatabase.app" />
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+        <button class="btn btn-primary btn-sm" onclick="saveCloudConfig()">Verbinden &amp; speichern</button>
+        <button class="btn btn-surface btn-sm" onclick="copyInviteLink()">Einladungslink für WhatsApp kopieren</button>
+      </div>
+      <div id="inviteLinkBox" class="mono-box" style="display:none; margin-bottom:12px;"></div>
+
+      <div class="divider"></div>
+
+      <h4 style="font-size:0.92rem; margin-bottom:8px;">Monatsbeiträge &amp; Berechtigungen</h4>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Grundbeitrag (€ / Monat)</label>
+          <input type="number" id="cfgBaseFee" class="form-control" step="0.50" min="0" value="3.00" />
+        </div>
+        <div class="form-group">
+          <label>Kaffee-Flatrate (€ / Monat)</label>
+          <input type="number" id="cfgCoffeeFee" class="form-control" step="0.50" min="0" value="2.00" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Wer darf Buchungen eintragen, Beiträge ändern oder stornieren?</label>
+        <select id="cfgAdminMode" class="form-control">
+          <option value="all">Alle Kollegen (offen für jeden)</option>
+          <option value="admins">Nur 2 Kassen-Admins (mit Admin-PIN geschützt)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Admin-PIN (Standard: 1100)</label>
+        <input type="text" id="cfgAdminPin" class="form-control" maxlength="12" />
+      </div>
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="cfgAutoMonthly" checked />
+          <span>Monatsbeiträge am Monatsanfang automatisch buchen</span>
+        </label>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-dark btn-sm" onclick="saveAdminSettings()">Einstellungen speichern</button>
+        <button class="btn btn-surface btn-sm" onclick="triggerManualMonthBilling()">Aktuellen Monat jetzt buchen</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <h4 style="font-size:0.92rem; margin-bottom:8px;">Datensicherung &amp; Echtstart</h4>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-surface btn-sm" onclick="exportJSON()">JSON-Backup sichern</button>
+        <label class="btn btn-surface btn-sm" style="margin:0; cursor:pointer;">
+          JSON-Backup laden
+          <input type="file" accept=".json" style="display:none;" onchange="importJSON(event)" />
+        </label>
+        <button class="btn btn-danger-soft btn-sm" onclick="resetForProduction()">Alle Stände auf 0,00 € leeren</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+  // Fest hinterlegte Firebase-URL für automatische Synchronisation auf allen Geräten:
+  const CLOUD_CONFIG = {
+    firebaseUrl: "https://kaffeekasseduelmen-598e7-default-rtdb.europe-west1.firebasedatabase.app"
+  };
+
+  const STORAGE_KEY = "tatort_kaffeekasse_state_v4";
+  const URL_KEY = "tatort_kaffeekasse_fb_url";
+  const ADMIN_SESSION_KEY = "tatort_kaffeekasse_admin_unlocked";
+  const EQUILIBRIUM_LIMIT = 15.0; // ± 15,00 € gilt als "Im Ausgleich"
+
+  let state = {
+    members: [],
+    transactions: [],
+    cashBox: 0,
+    billedMonths: [],
+    baseFeeAmount: 3.00,
+    coffeeFeeAmount: 2.00,
+    adminMode: "all",
+    adminPin: "1100",
+    autoMonthly: true,
+    updatedAt: 0
+  };
+
+  let selectedBreakfastIds = new Set();
+  let eventSource = null;
+  let syncDebounceTimer = null;
+  let isApplyingRemote = false;
+
+  // --- Initialisierung ---
+  function init() {
+    const today = getLocalDateISO();
+    document.getElementById("breakfastDate").value = today;
+    document.getElementById("expDate").value = today;
+
+    const params = new URLSearchParams(window.location.search);
+    const dbParam = params.get("db");
+    if (dbParam && dbParam.startsWith("https://")) {
+      localStorage.setItem(URL_KEY, cleanFirebaseUrl(dbParam));
+    }
+
+    loadLocalState();
+    updateAdminHeaderButton();
+
+    const fbUrl = getFirebaseUrl();
+    if (fbUrl) {
+      connectFirebase(fbUrl);
+    } else {
+      checkAndApplyMonthlyFees(false);
+      renderAll();
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && getFirebaseUrl()) {
+        fetchLatestFromFirebase(false);
+      }
+    });
+  }
+
+  function cleanFirebaseUrl(url) {
+    return url.trim().replace(/\/+$/, "");
+  }
+
+  function getFirebaseUrl() {
+    return cleanFirebaseUrl(localStorage.getItem(URL_KEY) || CLOUD_CONFIG.firebaseUrl || "");
+  }
+
+  function getBaseFee() {
+    return typeof state.baseFeeAmount === "number" && !isNaN(state.baseFeeAmount) ? round2(state.baseFeeAmount) : 3.00;
+  }
+
+  function getCoffeeFee() {
+    return typeof state.coffeeFeeAmount === "number" && !isNaN(state.coffeeFeeAmount) ? round2(state.coffeeFeeAmount) : 2.00;
+  }
+
+  function normalizeState(rawObj) {
+    const merged = Object.assign({
+      members: [],
+      transactions: [],
+      cashBox: 0,
+      billedMonths: [],
+      baseFeeAmount: 3.00,
+      coffeeFeeAmount: 2.00,
+      adminMode: "all",
+      adminPin: "1100",
+      autoMonthly: true,
+      updatedAt: 0
+    }, rawObj || {});
+
+    if (typeof merged.baseFeeAmount !== "number" || isNaN(merged.baseFeeAmount)) merged.baseFeeAmount = 3.00;
+    if (typeof merged.coffeeFeeAmount !== "number" || isNaN(merged.coffeeFeeAmount)) merged.coffeeFeeAmount = 2.00;
+
+    merged.members = (merged.members || []).map(m => ({
+      ...m,
+      baseFee: m.baseFee !== undefined ? Boolean(m.baseFee) : true,
+      coffeeFlat: Boolean(m.coffeeFlat),
+      balance: round2(Number(m.balance) || 0)
+    }));
+
+    return merged;
+  }
+
+  function loadLocalState() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        state = normalizeState(JSON.parse(raw));
+        return;
+      } catch (e) {}
+    }
+    seedDemoData();
+  }
+
+  function seedDemoData() {
+    const curMonth = getCurrentMonthKey();
+    const today = getLocalDateISO();
+    state = normalizeState({
+      members: [
+        { id: "m1", name: "Markus", baseFee: true, coffeeFlat: true, balance: 12.00 },
+        { id: "m2", name: "Stefan", baseFee: true, coffeeFlat: true, balance: -8.00 },
+        { id: "m3", name: "Julia", baseFee: true, coffeeFlat: true, balance: 27.00 },
+        { id: "m4", name: "Thomas", baseFee: true, coffeeFlat: false, balance: -18.00 },
+        { id: "m5", name: "Christian", baseFee: false, coffeeFlat: true, balance: -3.00 }
+      ],
+      transactions: [
+        {
+          id: "t1",
+          date: today,
+          type: "expense",
+          title: "Einkauf Lidl fürs Frühstück",
+          amount: 65.00,
+          details: "Ausgelegt von Julia (+65,00 €)",
+          effects: [{ memberId: "m3", name: "Julia", delta: 65.00 }],
+          cashDelta: 0
+        },
+        {
+          id: "t2",
+          date: today,
+          type: "breakfast",
+          title: "Freitagsfrühstück (4 Teilnehmer)",
+          amount: 20.00,
+          details: "Markus, Stefan, Julia, Christian (je -5,00 €)",
+          effects: [
+            { memberId: "m1", name: "Markus", delta: -5.00 },
+            { memberId: "m2", name: "Stefan", delta: -5.00 },
+            { memberId: "m3", name: "Julia", delta: -5.00 },
+            { memberId: "m5", name: "Christian", delta: -5.00 }
+          ],
+          cashDelta: 0
+        }
+      ],
+      cashBox: 45.00,
+      billedMonths: [curMonth],
+      baseFeeAmount: 3.00,
+      coffeeFeeAmount: 2.00,
+      adminMode: "all",
+      adminPin: "1100",
+      autoMonthly: true,
+      updatedAt: Date.now()
+    });
+    saveLocalOnly();
+  }
+
+  function saveLocalOnly() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  async function persistState() {
+    state.updatedAt = Date.now();
+    saveLocalOnly();
+    updateAdminHeaderButton();
+    renderAll();
+
+    const fbUrl = getFirebaseUrl();
+    if (fbUrl && !isApplyingRemote) {
+      try {
+        const res = await fetch(`${fbUrl}/kaffeekasse.json`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(state)
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        setSyncStatus("live", "Live-Sync aktiv");
+      } catch (err) {
+        setSyncStatus("error", "Sync-Fehler (Lokal)");
+      }
+    }
+  }
+
+  // --- Firebase Cloud-Sync ---
+  async function connectFirebase(fbUrl) {
+    setSyncStatus("connecting", "Verbinde...");
+    try {
+      const res = await fetch(`${fbUrl}/kaffeekasse.json`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const remoteData = await res.json();
+
+      if (remoteData && Array.isArray(remoteData.members)) {
+        isApplyingRemote = true;
+        state = normalizeState(remoteData);
+        saveLocalOnly();
+        isApplyingRemote = false;
+        checkAndApplyMonthlyFees(true);
+      } else {
+        checkAndApplyMonthlyFees(false);
+        await persistState();
+      }
+
+      setSyncStatus("live", "Live-Sync aktiv");
+      updateAdminHeaderButton();
+      startFirebaseStream(fbUrl);
+      renderAll();
+    } catch (e) {
+      setSyncStatus("error", "Cloud offline (Lokal)");
+      checkAndApplyMonthlyFees(false);
+      renderAll();
+    }
+  }
+
+  async function fetchLatestFromFirebase(showFeedback = false) {
+    const fbUrl = getFirebaseUrl();
+    if (!fbUrl) return;
+    try {
+      const res = await fetch(`${fbUrl}/kaffeekasse.json`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const remoteData = await res.json();
+      if (remoteData && Array.isArray(remoteData.members) && remoteData.updatedAt !== state.updatedAt) {
+        isApplyingRemote = true;
+        state = normalizeState(remoteData);
+        saveLocalOnly();
+        updateAdminHeaderButton();
+        renderAll();
+        isApplyingRemote = false;
+      }
+      setSyncStatus("live", "Live-Sync aktiv");
+      if (showFeedback) showToast("Kassenstand aktualisiert.");
+    } catch (e) {
+      setSyncStatus("error", "Verbindung prüfen");
+      if (showFeedback) showToast("Cloud derzeit nicht erreichbar.");
+    }
+  }
+
+  function startFirebaseStream(fbUrl) {
+    if (eventSource) {
+      eventSource.close();
+      eventSource = null;
+    }
+    try {
+      eventSource = new EventSource(`${fbUrl}/kaffeekasse.json`);
+      const scheduleSync = () => {
+        clearTimeout(syncDebounceTimer);
+        syncDebounceTimer = setTimeout(() => fetchLatestFromFirebase(false), 250);
+      };
+      eventSource.addEventListener("put", scheduleSync);
+      eventSource.addEventListener("patch", scheduleSync);
+      eventSource.onopen = () => setSyncStatus("live", "Live-Sync aktiv");
+      eventSource.onerror = () => setSyncStatus("error", "Sync unterbrochen");
+    } catch (e) {}
+  }
+
+  function manualRefresh() {
+    if (getFirebaseUrl()) {
+      fetchLatestFromFirebase(true);
+    } else {
+      renderAll();
+      showToast("Lokale Ansicht aktualisiert.");
+    }
+  }
+
+  function setSyncStatus(mode, text) {
+    const pill = document.getElementById("syncBadge");
+    pill.className = "status-pill " + (mode === "live" ? "live" : mode === "error" ? "error" : "");
+    document.getElementById("syncText").textContent = text;
+  }
+
+  // --- Admin-Berechtigungen ---
+  function isAdminUnlocked() {
+    if (state.adminMode !== "admins") return true;
+    return sessionStorage.getItem(ADMIN_SESSION_KEY) === state.adminPin;
+  }
+
+  function requireAdmin() {
+    if (isAdminUnlocked()) return true;
+    const entered = prompt("Admin-Modus aktiv. Bitte Admin-PIN eingeben:");
+    if (entered === null) return false;
+    if (entered.trim() === state.adminPin) {
+      sessionStorage.setItem(ADMIN_SESSION_KEY, state.adminPin);
+      updateAdminHeaderButton();
+      showToast("Admin-Modus für diese Sitzung entsperrt.");
+      return true;
+    }
+    alert("Falsche Admin-PIN.");
+    return false;
+  }
+
+  function toggleAdminSession() {
+    if (isAdminUnlocked()) {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      updateAdminHeaderButton();
+      showToast("Admin-Modus wieder gesperrt.");
+    } else {
+      requireAdmin();
+    }
+  }
+
+  function updateAdminHeaderButton() {
+    const btn = document.getElementById("adminLockBtn");
+    const label = document.getElementById("adminLockLabel");
+    if (state.adminMode === "admins") {
+      btn.style.display = "inline-flex";
+      label.textContent = isAdminUnlocked() ? "Admin aktiv" : "Admin gesperrt";
+    } else {
+      btn.style.display = "none";
+    }
+  }
+
+  // --- Automatische Monatsbeiträge ---
+  function getCurrentMonthKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  }
+
+  function formatMonthLabel(key) {
+    const [y, m] = key.split("-");
+    const names = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+    return `${names[parseInt(m, 10) - 1]} ${y}`;
+  }
+
+  function getMemberMonthlyFee(m) {
+    const base = m.baseFee !== false ? getBaseFee() : 0;
+    const coffee = m.coffeeFlat ? getCoffeeFee() : 0;
+    return round2(base + coffee);
+  }
+
+  function getMemberFeeSummary(m) {
+    const hasBase = m.baseFee !== false;
+    const hasCoffee = Boolean(m.coffeeFlat);
+    const base = getBaseFee();
+    const coffee = getCoffeeFee();
+    const total = getMemberMonthlyFee(m);
+
+    if (hasBase && hasCoffee) {
+      return `${formatEuro(total)} (${formatEuro(base)} Grund + ${formatEuro(coffee)} Kaffee)`;
+    }
+    if (hasBase) {
+      return `${formatEuro(total)} (nur Grundbeitrag)`;
+    }
+    if (hasCoffee) {
+      return `${formatEuro(total)} (nur Kaffee-Flat)`;
+    }
+    return "0,00 € (beitragsfrei)";
+  }
+
+  function checkAndApplyMonthlyFees(shouldPersist) {
+    if (state.autoMonthly === false) return;
+    const curMonth = getCurrentMonthKey();
+    if (!Array.isArray(state.billedMonths)) state.billedMonths = [];
+    if (state.billedMonths.includes(curMonth) || state.members.length === 0) return;
+
+    executeMonthBilling(curMonth, shouldPersist);
+  }
+
+  function executeMonthBilling(monthKey, shouldPersist) {
+    const base = getBaseFee();
+    const coffee = getCoffeeFee();
+    let totalBilled = 0;
+    const effects = [];
+
+    state.members.forEach(m => {
+      const fee = getMemberMonthlyFee(m);
+      if (fee > 0) {
+        m.balance = round2(m.balance - fee);
+        totalBilled = round2(totalBilled + fee);
+        effects.push({ memberId: m.id, name: m.name, delta: -fee });
+      }
+    });
+
+    if (!state.billedMonths.includes(monthKey)) {
+      state.billedMonths.push(monthKey);
+    }
+
+    if (effects.length > 0) {
+      state.transactions.unshift({
+        id: "tx_" + Date.now(),
+        date: getLocalDateISO(),
+        type: "monthly",
+        title: `Monatsbeitrag ${formatMonthLabel(monthKey)}`,
+        amount: totalBilled,
+        details: `Grundbeitrag ${formatEuro(base)} / Kaffee-Flat ${formatEuro(coffee)} (je nach Auswahl)`,
+        effects,
+        cashDelta: 0
+      });
+      showToast(`Monatsbeiträge für ${formatMonthLabel(monthKey)} verbucht.`);
+    }
+
+    if (shouldPersist) persistState();
+  }
+
+  function triggerManualMonthBilling() {
+    if (!requireAdmin()) return;
+    const curMonth = getCurrentMonthKey();
+    if (!confirm(`Monatsbeiträge für ${formatMonthLabel(curMonth)} (${formatEuro(getBaseFee())} Grund / ${formatEuro(getCoffeeFee())} Kaffee) jetzt gemäß individueller Auswahl buchen?`)) return;
+    executeMonthBilling(curMonth, true);
+    closeModal("settingsModal");
+  }
+
+  // --- Freitagsfrühstück ---
+  function toggleBreakfastPerson(id) {
+    if (selectedBreakfastIds.has(id)) selectedBreakfastIds.delete(id);
+    else selectedBreakfastIds.add(id);
+    renderBreakfastChips();
+  }
+
+  function toggleAllBreakfast() {
+    if (selectedBreakfastIds.size === state.members.length) {
+      selectedBreakfastIds.clear();
+    } else {
+      state.members.forEach(m => selectedBreakfastIds.add(m.id));
+    }
+    renderBreakfastChips();
+  }
+
+  function bookBreakfast() {
+    if (selectedBreakfastIds.size === 0) {
+      showToast("Bitte zuerst mindestens einen Teilnehmer auswählen.");
+      return;
+    }
+    if (!requireAdmin()) return;
+
+    const date = document.getElementById("breakfastDate").value || getLocalDateISO();
+    const names = [];
+    const effects = [];
+
+    state.members.forEach(m => {
+      if (selectedBreakfastIds.has(m.id)) {
+        m.balance = round2(m.balance - 5.00);
+        names.push(m.name);
+        effects.push({ memberId: m.id, name: m.name, delta: -5.00 });
+      }
+    });
+
+    const total = round2(effects.length * 5.00);
+    state.transactions.unshift({
+      id: "tx_" + Date.now(),
+      date,
+      type: "breakfast",
+      title: `Freitagsfrühstück (${effects.length} Teilnehmer)`,
+      amount: total,
+      details: `${names.join(", ")} (je -5,00 €)`,
+      effects,
+      cashDelta: 0
+    });
+
+    selectedBreakfastIds.clear();
+    showToast(`Frühstück für ${names.length} Personen (${formatEuro(total)}) verbucht.`);
+    persistState();
+  }
+
+  // --- Einkäufe / Ausgaben ---
+  function openExpenseModal() {
+    if (!requireAdmin()) return;
+    const sel = document.getElementById("expPayer");
+    sel.innerHTML = `<option value="CASHBOX">Barkasse (direkt aus Kassette bezahlt)</option>` +
+      state.members.map(m => `<option value="${m.id}">${escapeHtml(m.name)} (privat ausgelegt)</option>`).join("");
+    document.getElementById("expDesc").value = "";
+    document.getElementById("expAmount").value = "";
+    openModal("expenseModal");
+  }
+
+  function saveExpense() {
+    const payerId = document.getElementById("expPayer").value;
+    const desc = document.getElementById("expDesc").value.trim();
+    const amount = round2(parseFloat(document.getElementById("expAmount").value));
+    const date = document.getElementById("expDate").value || getLocalDateISO();
+
+    if (!desc || isNaN(amount) || amount <= 0) {
+      alert("Bitte Verwendungszweck und einen gültigen Betrag eingeben.");
+      return;
+    }
+
+    let details = "";
+    const effects = [];
+    let cashDelta = 0;
+
+    if (payerId === "CASHBOX") {
+      state.cashBox = round2(state.cashBox - amount);
+      cashDelta = -amount;
+      details = `Aus der Barkasse entnommen (-${formatEuro(amount)})`;
+    } else {
+      const m = state.members.find(x => x.id === payerId);
+      if (!m) return;
+      m.balance = round2(m.balance + amount);
+      effects.push({ memberId: m.id, name: m.name, delta: amount });
+      details = `Ausgelegt von ${m.name} (+${formatEuro(amount)})`;
+    }
+
+    state.transactions.unshift({
+      id: "tx_" + Date.now(),
+      date,
+      type: "expense",
+      title: desc,
+      amount,
+      details,
+      effects,
+      cashDelta
+    });
+
+    closeModal("expenseModal");
+    showToast(`Einkauf „${desc}“ (${formatEuro(amount)}) verbucht.`);
+    persistState();
+  }
+
+  // --- Barzahlung & Barkassen-Korrektur ---
+  function openCashModal(preselectMemberId = null) {
+    if (!requireAdmin()) return;
+    if (state.members.length === 0) {
+      showToast("Bitte zuerst Kollegen anlegen.");
+      return;
+    }
+    const sel = document.getElementById("cashMember");
+    sel.innerHTML = state.members.map(m => `<option value="${m.id}">${escapeHtml(m.name)} (${formatSignedEuro(m.balance)})</option>`).join("");
+    if (preselectMemberId) sel.value = preselectMemberId;
+    document.getElementById("cashAmount").value = "";
+    document.getElementById("cashNote").value = "";
+    updateCashHint();
+    openModal("cashModal");
+  }
+
+  function updateCashHint() {
+    const id = document.getElementById("cashMember").value;
+    const m = state.members.find(x => x.id === id);
+    if (!m) return;
+    const hint = document.getElementById("cashCurrentHint");
+    const dir = document.getElementById("cashDirection");
+    if (m.balance < 0) {
+      hint.textContent = `Aktueller Stand: ${formatSignedEuro(m.balance)} (offener Betrag an die Kasse).`;
+      dir.value = "in";
+    } else if (m.balance > 0) {
+      hint.textContent = `Aktueller Stand: ${formatSignedEuro(m.balance)} (Einkaufs-Guthaben).`;
+      dir.value = "out";
+    } else {
+      hint.textContent = "Aktueller Stand: 0,00 € (bereits ausgeglichen).";
+    }
+  }
+
+  function fillExactBalance() {
+    const id = document.getElementById("cashMember").value;
+    const m = state.members.find(x => x.id === id);
+    if (!m) return;
+    document.getElementById("cashAmount").value = Math.abs(m.balance).toFixed(2);
+    document.getElementById("cashDirection").value = m.balance <= 0 ? "in" : "out";
+  }
+
+  function saveCashPayment() {
+    const id = document.getElementById("cashMember").value;
+    const dir = document.getElementById("cashDirection").value;
+    const amount = round2(parseFloat(document.getElementById("cashAmount").value));
+    const note = document.getElementById("cashNote").value.trim();
+
+    if (isNaN(amount) || amount <= 0) {
+      alert("Bitte einen gültigen Betrag eingeben.");
+      return;
+    }
+
+    const m = state.members.find(x => x.id === id);
+    if (!m) return;
+
+    const delta = dir === "in" ? amount : -amount;
+    m.balance = round2(m.balance + delta);
+    state.cashBox = round2(state.cashBox + delta);
+
+    state.transactions.unshift({
+      id: "tx_" + Date.now(),
+      date: getLocalDateISO(),
+      type: "cash",
+      title: dir === "in" ? `Barzahlung von ${m.name}` : `Barauszahlung an ${m.name}`,
+      amount,
+      details: note || (dir === "in" ? "In die Barkasse eingezahlt" : "Guthaben bar ausgezahlt"),
+      effects: [{ memberId: m.id, name: m.name, delta }],
+      cashDelta: delta
+    });
+
+    closeModal("cashModal");
+    showToast(`Barzahlung für ${m.name} (${formatEuro(amount)}) erfasst.`);
+    persistState();
+  }
+
+  function openCashAdjustModal() {
+    if (!requireAdmin()) return;
+    document.getElementById("adjCashAmount").value = state.cashBox.toFixed(2);
+    document.getElementById("adjCashReason").value = "";
+    openModal("cashAdjustModal");
+  }
+
+  function saveCashAdjustment() {
+    const target = round2(parseFloat(document.getElementById("adjCashAmount").value));
+    const reason = document.getElementById("adjCashReason").value.trim() || "Kassenbestand korrigiert";
+    if (isNaN(target)) {
+      alert("Bitte einen gültigen Betrag eingeben.");
+      return;
+    }
+    const diff = round2(target - state.cashBox);
+    if (diff === 0) {
+      closeModal("cashAdjustModal");
+      return;
+    }
+    state.cashBox = target;
+    state.transactions.unshift({
+      id: "tx_" + Date.now(),
+      date: getLocalDateISO(),
+      type: "cash",
+      title: `Barkassen-Korrektur (${formatSignedEuro(diff)})`,
+      amount: Math.abs(diff),
+      details: `${reason} · Neuer Bestand: ${formatEuro(target)}`,
+      effects: [],
+      cashDelta: diff
+    });
+    closeModal("cashAdjustModal");
+    showToast(`Barkasse auf ${formatEuro(target)} aktualisiert.`);
+    persistState();
+  }
+
+  // --- Buchung stornieren ---
+  function deleteTransaction(txId) {
+    if (!requireAdmin()) return;
+    const tx = state.transactions.find(t => t.id === txId);
+    if (!tx) return;
+    if (!confirm(`Buchung „${tx.title}“ (${formatEuro(tx.amount)}) wirklich stornieren und alle betroffenen Stände zurückrechnen?`)) return;
+
+    if (typeof tx.cashDelta === "number" && tx.cashDelta !== 0) {
+      state.cashBox = round2(state.cashBox - tx.cashDelta);
+    }
+    if (Array.isArray(tx.effects)) {
+      tx.effects.forEach(eff => {
+        const m = state.members.find(x => x.id === eff.memberId);
+        if (m) {
+          m.balance = round2(m.balance - eff.delta);
+        }
+      });
+    }
+
+    state.transactions = state.transactions.filter(t => t.id !== txId);
+    showToast("Buchung storniert und Salden zurückgesetzt.");
+    persistState();
+  }
+
+  // --- Kollegen verwalten ---
+  function openMemberModal() {
+    if (!requireAdmin()) return;
+    document.getElementById("newMemberName").value = "";
+    document.getElementById("newMemberBaseFee").checked = true;
+    document.getElementById("newMemberCoffee").checked = true;
+    document.getElementById("newMemberBaseLabel").textContent = `Grundbeitrag aktiv (${formatEuro(getBaseFee())} / Monat)`;
+    document.getElementById("newMemberCoffeeLabel").textContent = `Kaffee-Flatrate aktiv (${formatEuro(getCoffeeFee())} / Monat)`;
+    document.getElementById("newMemberStartBalance").value = "0.00";
+    openModal("memberModal");
+  }
+
+  function saveNewMember() {
+    const name = document.getElementById("newMemberName").value.trim();
+    const baseFee = document.getElementById("newMemberBaseFee").checked;
+    const coffeeFlat = document.getElementById("newMemberCoffee").checked;
+    const startBal = round2(parseFloat(document.getElementById("newMemberStartBalance").value) || 0);
+
+    if (!name) {
+      alert("Bitte einen Namen eingeben.");
+      return;
+    }
+
+    const newMember = {
+      id: "m_" + Date.now(),
+      name,
+      baseFee,
+      coffeeFlat,
+      balance: startBal
+    };
+    state.members.push(newMember);
+
+    if (startBal !== 0) {
+      state.transactions.unshift({
+        id: "tx_" + Date.now(),
+        date: getLocalDateISO(),
+        type: "adjustment",
+        title: `Startsaldo ${name}`,
+        amount: Math.abs(startBal),
+        details: `Übertrag bei Aufnahme (${formatSignedEuro(startBal)})`,
+        effects: [{ memberId: newMember.id, name: newMember.name, delta: startBal }],
+        cashDelta: 0
+      });
+    }
+
+    closeModal("memberModal");
+    showToast(`${name} zur Kasse hinzugefügt.`);
+    persistState();
+  }
+
+  function openMemberDetail(memberId) {
+    const m = state.members.find(x => x.id === memberId);
+    if (!m) return;
+
+    const hasBase = m.baseFee !== false;
+    const hasCoffee = Boolean(m.coffeeFlat);
+    const base = getBaseFee();
+    const coffee = getCoffeeFee();
+
+    document.getElementById("detailTitle").textContent = `Kontoauszug · ${m.name}`;
+    const relTx = state.transactions.filter(t =>
+      Array.isArray(t.effects) && t.effects.some(e => e.memberId === m.id)
+    );
+
+    const statusBadge = getStatusPill(m.balance);
+
+    document.getElementById("detailBody").innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; background:var(--surface-subtle); padding:15px; border-radius:10px; border:1px solid var(--border); margin-bottom:16px;">
+        <div>
+          <div style="font-size:0.76rem; font-weight:600; text-transform:uppercase; color:var(--ink-muted);">Aktueller Stand</div>
+          <div class="num ${m.balance > 0 ? 'c-pos' : m.balance < 0 ? 'c-neg' : 'c-neu'}" style="font-size:1.55rem; font-weight:700; margin:2px 0;">
+            ${formatSignedEuro(m.balance)}
+          </div>
+          ${statusBadge}
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px; min-width:190px;">
+          <button class="btn btn-dark btn-sm" onclick="closeModal('detailModal'); openCashModal('${m.id}')">Bar ausgleichen</button>
+          <button class="btn ${hasBase ? 'btn-toggle-on' : 'btn-surface'} btn-sm" onclick="toggleMemberBaseFee('${m.id}')">
+            Grundbeitrag: ${hasBase ? `Aktiv (${formatEuro(base)})` : 'Aus (0,00 €)'}
+          </button>
+          <button class="btn ${hasCoffee ? 'btn-toggle-on' : 'btn-surface'} btn-sm" onclick="toggleMemberCoffee('${m.id}')">
+            Kaffee-Flat: ${hasCoffee ? `Aktiv (${formatEuro(coffee)})` : 'Aus (0,00 €)'}
+          </button>
+        </div>
+      </div>
+
+      <div style="font-size:0.84rem; font-weight:700; margin-bottom:8px;">Einzelbuchungen (${relTx.length})</div>
+      <div style="border:1px solid var(--border); border-radius:10px; overflow:hidden;">
+        ${relTx.length === 0
+          ? `<div style="padding:14px; font-size:0.84rem; color:var(--ink-muted);">Keine Buchungen für ${escapeHtml(m.name)} vorhanden.</div>`
+          : relTx.map(t => {
+              const eff = t.effects.find(e => e.memberId === m.id);
+              const val = eff ? eff.delta : 0;
+              return `
+                <div class="tx-row">
+                  <div>
+                    <div class="tx-title">${escapeHtml(t.title)}</div>
+                    <div class="tx-meta">${formatDateDE(t.date)} · ${escapeHtml(t.details || '')}</div>
+                  </div>
+                  <div class="tx-amount num ${val > 0 ? 'c-pos' : val < 0 ? 'c-neg' : ''}">
+                    ${formatSignedEuro(val)}
+                  </div>
+                </div>
+              `;
+            }).join("")}
+      </div>
+
+      <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+        <span class="hint">Aktueller Monatsbeitrag: <strong>${getMemberFeeSummary(m)}</strong></span>
+        <button class="btn btn-danger-soft btn-sm" onclick="deleteMember('${m.id}')">Kollege entfernen</button>
+      </div>
+    `;
+    openModal("detailModal");
+  }
+
+  function toggleMemberBaseFee(memberId) {
+    if (!requireAdmin()) return;
+    const m = state.members.find(x => x.id === memberId);
+    if (!m) return;
+    m.baseFee = !(m.baseFee !== false);
+    persistState();
+    openMemberDetail(memberId);
+  }
+
+  function toggleMemberCoffee(memberId) {
+    if (!requireAdmin()) return;
+    const m = state.members.find(x => x.id === memberId);
+    if (!m) return;
+    m.coffeeFlat = !m.coffeeFlat;
+    persistState();
+    openMemberDetail(memberId);
+  }
+
+  function deleteMember(memberId) {
+    if (!requireAdmin()) return;
+    const m = state.members.find(x => x.id === memberId);
+    if (!m) return;
+    const warn = m.balance !== 0
+      ? `Achtung: ${m.name} hat noch einen offenen Stand von ${formatSignedEuro(m.balance)}! Trotzdem entfernen?`
+      : `Kollege „${m.name}“ wirklich aus der Liste entfernen?`;
+    if (!confirm(warn)) return;
+
+    state.members = state.members.filter(x => x.id !== memberId);
+    selectedBreakfastIds.delete(memberId);
+    closeModal("detailModal");
+    showToast(`${m.name} entfernt.`);
+    persistState();
+  }
+
+  // --- Einstellungen ---
+  function openSettingsModal() {
+    document.getElementById("cfgFirebaseUrl").value = getFirebaseUrl();
+    document.getElementById("cfgBaseFee").value = getBaseFee().toFixed(2);
+    document.getElementById("cfgCoffeeFee").value = getCoffeeFee().toFixed(2);
+    document.getElementById("cfgAdminMode").value = state.adminMode || "all";
+    document.getElementById("cfgAdminPin").value = state.adminPin || "1100";
+    document.getElementById("cfgAutoMonthly").checked = state.autoMonthly !== false;
+    document.getElementById("inviteLinkBox").style.display = "none";
+    openModal("settingsModal");
+  }
+
+  async function saveCloudConfig() {
+    const raw = document.getElementById("cfgFirebaseUrl").value.trim();
+    if (!raw) {
+      localStorage.removeItem(URL_KEY);
+      if (eventSource) eventSource.close();
+      setSyncStatus("offline", "Lokal gespeichert");
+      showToast("Cloud-Sync deaktiviert.");
+      return;
+    }
+    if (!raw.startsWith("https://")) {
+      alert("Bitte eine gültige https:// Firebase-URL eingeben.");
+      return;
+    }
+    const clean = cleanFirebaseUrl(raw);
+    localStorage.setItem(URL_KEY, clean);
+    await connectFirebase(clean);
+    showToast("Cloud-Datenbank verbunden.");
+  }
+
+  function copyInviteLink() {
+    const fbUrl = getFirebaseUrl();
+    if (!fbUrl) {
+      alert("Bitte zuerst oben eure Firebase-URL eintragen und verbinden.");
+      return;
+    }
+    const baseUrl = window.location.origin + window.location.pathname;
+    const inviteUrl = `${baseUrl}?db=${encodeURIComponent(fbUrl)}`;
+    const box = document.getElementById("inviteLinkBox");
+    box.style.display = "block";
+    box.textContent = inviteUrl;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(inviteUrl).then(() => {
+        showToast("Einladungslink in Zwischenablage kopiert.");
+      });
+    }
+  }
+
+  function saveAdminSettings() {
+    if (!requireAdmin()) return;
+
+    const newBase = round2(parseFloat(document.getElementById("cfgBaseFee").value));
+    const newCoffee = round2(parseFloat(document.getElementById("cfgCoffeeFee").value));
+
+    if (isNaN(newBase) || newBase < 0 || isNaN(newCoffee) || newCoffee < 0) {
+      alert("Bitte gültige Beträge (ab 0,00 €) für Grundbeitrag und Kaffee-Flatrate eingeben.");
+      return;
+    }
+
+    state.baseFeeAmount = newBase;
+    state.coffeeFeeAmount = newCoffee;
+    state.adminMode = document.getElementById("cfgAdminMode").value;
+    state.adminPin = document.getElementById("cfgAdminPin").value.trim() || "1100";
+    state.autoMonthly = document.getElementById("cfgAutoMonthly").checked;
+
+    if (state.adminMode === "admins") {
+      sessionStorage.setItem(ADMIN_SESSION_KEY, state.adminPin);
+    }
+
+    persistState();
+    showToast(`Einstellungen gespeichert (${formatEuro(newBase)} Grund / ${formatEuro(newCoffee)} Kaffee).`);
+  }
+
+  function resetForProduction() {
+    if (!requireAdmin()) return;
+    if (!confirm("Sollen alle Buchungen, Salden und die Barkasse für den Echtstart auf 0,00 € zurückgesetzt werden? (Die Namen der Kollegen bleiben erhalten.)")) return;
+    state.members.forEach(m => m.balance = 0);
+    state.transactions = [];
+    state.cashBox = 0;
+    state.billedMonths = [getCurrentMonthKey()];
+    closeModal("settingsModal");
+    showToast("Kasse für den Echtstart auf 0,00 € zurückgesetzt.");
+    persistState();
+  }
+
+  // --- Exporte & Backups ---
+  function exportCSV() {
+    const today = getLocalDateISO();
+    const lines = ["Kategorie;Datum;Bezeichnung;Betrag_EUR;Details"];
+    lines.push(`Barkasse;${today};Bargeldbestand Kassette;${state.cashBox.toFixed(2).replace(".", ",")};Physischer Bestand`);
+    state.members.forEach(m => {
+      lines.push(`Kollege;${today};${m.name};${m.balance.toFixed(2).replace(".", ",")};Monatsbeitrag: ${getMemberFeeSummary(m)}`);
+    });
+    state.transactions.forEach(t => {
+      lines.push(`Buchung;${formatDateDE(t.date)};${t.title.replace(/;/g, ",")};${t.amount.toFixed(2).replace(".", ",")};${(t.details || "").replace(/;/g, ",")}`);
+    });
+    downloadFile("\uFEFF" + lines.join("\n"), `Tatort_Kaffeekasse_${today}.csv`, "text/csv;charset=utf-8;");
+  }
+
+  function exportJSON() {
+    downloadFile(JSON.stringify(state, null, 2), `Tatort_Kaffeekasse_Backup_${getLocalDateISO()}.json`, "application/json");
+  }
+
+  function importJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        if (!Array.isArray(parsed.members)) throw new Error("Ungültiges Format");
+        state = normalizeState(parsed);
+        persistState();
+        closeModal("settingsModal");
+        showToast("Backup erfolgreich eingespielt.");
+      } catch (err) {
+        alert("Fehler beim Laden der Backup-Datei.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function downloadFile(content, filename, mimeType) {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // --- Rendering ---
+  function renderAll() {
+    const totalDebt = round2(state.members.reduce((sum, m) => m.balance < 0 ? sum + Math.abs(m.balance) : sum, 0));
+    const totalCredit = round2(state.members.reduce((sum, m) => m.balance > 0 ? sum + m.balance : sum, 0));
+
+    document.getElementById("kpiCash").textContent = formatEuro(state.cashBox);
+    document.getElementById("kpiDebt").textContent = formatEuro(totalDebt);
+    document.getElementById("kpiCredit").textContent = formatEuro(totalCredit);
+    document.getElementById("kpiMonth").textContent = formatMonthLabel(getCurrentMonthKey());
+    document.getElementById("kpiRatesSub").textContent = `${formatEuro(getBaseFee())} Grund + ${formatEuro(getCoffeeFee())} Kaffee-Flat`;
+
+    // Mitglieder sortieren & rendern
+    const sortMode = document.getElementById("memberSort").value;
+    const sortedMembers = [...state.members].sort((a, b) => {
+      if (sortMode === "balance_asc") return a.balance - b.balance;
+      if (sortMode === "balance_desc") return b.balance - a.balance;
+      return a.name.localeCompare(b.name, "de");
+    });
+
+    document.getElementById("memberCountBadge").textContent = sortedMembers.length;
+    const listEl = document.getElementById("memberList");
+
+    if (sortedMembers.length === 0) {
+      listEl.innerHTML = `<div style="padding:22px; text-align:center; color:var(--ink-muted); font-size:0.86rem;">Noch keine Kollegen angelegt.</div>`;
+    } else {
+      listEl.innerHTML = sortedMembers.map(m => {
+        const cls = m.balance > 0 ? "c-pos" : m.balance < 0 ? "c-neg" : "c-neu";
+        return `
+          <div class="member-row" onclick="openMemberDetail('${m.id}')">
+            <div class="member-main">
+              <div class="member-name-line">
+                <span>${escapeHtml(m.name)}</span>
+                ${getStatusPill(m.balance)}
+              </div>
+              <div class="member-sub">
+                Monatsbeitrag: ${getMemberFeeSummary(m)}
+              </div>
+            </div>
+            <div class="member-right">
+              <span class="balance-val num ${cls}">${formatSignedEuro(m.balance)}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a8a29e" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    renderBreakfastChips();
+
+    // Buchungsjournal filtern & rendern
+    const filter = document.getElementById("txFilter").value;
+    const filteredTx = state.transactions.filter(t => filter === "all" || t.type === filter);
+    const txEl = document.getElementById("txList");
+
+    if (filteredTx.length === 0) {
+      txEl.innerHTML = `<div style="padding:20px; text-align:center; color:var(--ink-muted); font-size:0.85rem;">Keine Buchungen in dieser Ansicht.</div>`;
+    } else {
+      txEl.innerHTML = filteredTx.slice(0, 30).map(t => `
+        <div class="tx-row">
+          <div>
+            <div class="tx-title">${escapeHtml(t.title)}</div>
+            <div class="tx-meta">${formatDateDE(t.date)} · ${escapeHtml(t.details || "")}</div>
+          </div>
+          <div class="tx-actions">
+            <span class="tx-amount num">${formatEuro(t.amount)}</span>
+            <button class="undo-btn" onclick="deleteTransaction('${t.id}')" title="Buchung stornieren">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
+  }
+
+  function renderBreakfastChips() {
+    const wrap = document.getElementById("breakfastChips");
+    const sorted = [...state.members].sort((a, b) => a.name.localeCompare(b.name, "de"));
+    wrap.innerHTML = sorted.map(m => {
+      const active = selectedBreakfastIds.has(m.id);
+      return `<div class="chip ${active ? 'active' : ''}" onclick="toggleBreakfastPerson('${m.id}')">${escapeHtml(m.name)}</div>`;
+    }).join("");
+    const count = selectedBreakfastIds.size;
+    document.getElementById("breakfastPreview").textContent = `(${count} Pers. · ${formatEuro(count * 5.0)})`;
+  }
+
+  function getStatusPill(balance) {
+    if (Math.abs(balance) <= EQUILIBRIUM_LIMIT) {
+      return `<span class="pill pill-ok">Im Ausgleich (± 0)</span>`;
+    }
+    if (balance > EQUILIBRIUM_LIMIT) {
+      return `<span class="pill pill-credit">Einkaufs-Guthaben</span>`;
+    }
+    return `<span class="pill pill-warn">Mal einkaufen / Bar zahlen</span>`;
+  }
+
+  // --- Hilfsfunktionen ---
+  function openModal(id) { document.getElementById(id).classList.add("open"); }
+  function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+  let toastTimer = null;
+  function showToast(msg) {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("show"), 3200);
+  }
+
+  function round2(n) { return Math.round((n + Number.EPSILON) * 100) / 100; }
+  function formatEuro(n) { return (n || 0).toFixed(2).replace(".", ",") + " €"; }
+  function formatSignedEuro(n) {
+    const val = round2(n || 0);
+    return (val > 0 ? "+" : "") + val.toFixed(2).replace(".", ",") + " €";
+  }
+  function getLocalDateISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }
+  function formatDateDE(iso) {
+    if (!iso || !iso.includes("-")) return iso || "";
+    const [y, m, d] = iso.split("-");
+    return `${d}.${m}.${y}`;
+  }
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, s => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[s]));
+  }
+
+  init();
+</script>
+</body>
+</html>
